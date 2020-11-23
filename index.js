@@ -27,8 +27,7 @@ consoleListener.addListener("data", res => {
         } else if (consoleMsg === 'stop') {
             console.log('Stopping');
             bot.channels.get('738439111412809730').send(':red_circle: Bot has stopped.')
-                .then(msg => bot.destroy());
-            process.exit(0);
+                .then(msg => bot.destroy().then(process.exit(0)));
         }
     } catch (err) {
         console.error(err);
