@@ -6,10 +6,10 @@ const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 let roleLevel = 0;
 
-bot.login(TOKEN);
+bot.login(TOKEN).then(r => console.log('Used token: ' + r));
 
 bot.on('ready', () => {
-    bot.user.setActivity("Star Wars", {type: "WATCHING"});
+    bot.user.setActivity("Star Wars", {type: "WATCHING"}).then(r => console.log(r));
     console.info(`Logged in as ${bot.user.tag}!`);
     bot.channels.get('738439111412809730').send(':green_circle: Bot has started.')
 });
@@ -22,12 +22,16 @@ consoleListener.addListener("data", res => {
             console.log('test successful');
         } else if (consoleMsg === 'restart' || consoleMsg === 'reboot') {
             bot.channels.get('738439111412809730').send(':yellow_circle: Bot is restarting.')
+                .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`))
                 .then(msg => bot.destroy())
-                .then(() => bot.login(TOKEN));
+                .then(() => bot.login(TOKEN))
+                .catch(console.error);
         } else if (consoleMsg === 'stop') {
             console.log('Stopping');
             bot.channels.get('738439111412809730').send(':red_circle: Bot has stopped.')
-                .then(msg => bot.destroy().then(process.exit(0)));
+                .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`))
+                .then(msg => bot.destroy().then(process.exit(0)))
+                .catch(console.error);
         }
     } catch (err) {
         console.error(err);
@@ -53,51 +57,51 @@ bot.on('message', msg => {
                 args.push(lines[i].split(' '))
                 if (Number(msgArgs[7]) === args[i][1]) {
                     role = member.guild.roles.find(role => role.id === args[i][0]);
-                    member.addRole(role);
-                    msg.channel.send('Congratulations <@' + member.id + '>, you have just received the <@&' + role + '> role!');
+                    member.addRole(role).catch(console.error);//.then(console.log("Role " + role.id + " given to " + member.id));
+                    msg.channel.send('Congratulations <@' + member.id + '>, you have just received the <@&' + role + '> role!').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
                     break;
                 }
             }
 
             //test connection to bot
         } else if (msgContent === 'test' || msgContent === '!bok test') {
-            msg.reply('Test Successful'); //mentions pinger + pong
-            msg.channel.send('Test Successful'); //pong
+            msg.reply('Test Successful').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error); //mentions pinger + pong
+            msg.channel.send('Test Successful').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error); //pong
 
             //displays help list
         } else if (msgContent === '!bok help') {
-            msg.channel.send('!bok help - pulls up this list\n!bok helpAdmin - pulls up the help list for admins');
+            msg.channel.send('!bok help - pulls up this list\n!bok helpAdmin - pulls up the help list for admins').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
 
             //displays admin help list
         } else if (msgContent === '!bok helpadmin') {
             if (isAdmin(msg)) {
-                msg.channel.send('!bok helpAdmin - pulls up the help list for admins \n!bok test - test connection to bot \n!bok startScore - begins scoring members \n!bok <mee6 link> - sets up scoring link \n!bok kick <user> - temporary command that does nothing \n!bok siteClear - clears scoring link \n');
+                msg.channel.send('!bok helpAdmin - pulls up the help list for admins \n!bok test - test connection to bot \n!bok startScore - begins scoring members \n!bok <mee6 link> - sets up scoring link \n!bok kick <user> - temporary command that does nothing \n!bok siteClear - clears scoring link \n').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
             } else {
-                msg.channel.send('You do not have admin permissions!');
+                msg.channel.send('You do not have admin permissions!').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
             }
 
             //Tom Tbomb easter egg
         } else if (msg.content === 'Tom') {
-            msg.channel.send('Tbomb!');
+            msg.channel.send('Tbomb!').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
 
             //starts scoring members on server (setup)
         } else if (msgContent === '!bok startscore') {
             if (isAdmin(msg)) {
-                msg.channel.send('Starting to score members')
+                msg.channel.send('Starting to score members').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
                 getUserData(options, msg, rolesFile);
             } else {
-                msg.channel.send('You do not have admin permissions!');
+                msg.channel.send('You do not have admin permissions!').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
             }
 
         } else if (msgContent.startsWith('!bok role add')) {
             if (isAdmin(msg)) {
                 const args = msgContent.slice(0).split(' ');
                 roleLevel = parseFloat(args[4]);
-                role = msg.mentions.roles.first().id;
+                let role = msg.mentions.roles.first().id;
                 if (typeof roleLevel != "number" || isNaN(roleLevel)) {
-                    msg.reply("that is an invalid role level! Please enter a number.");
+                    msg.reply("that is an invalid role level! Please enter a number.").then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
                 } else if (role === undefined) {
-                    msg.reply("that is an invalid role! Please mention a role.");
+                    msg.reply("that is an invalid role! Please mention a role.").then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
                 } else {
                     roleLevel = Math.floor(roleLevel);
                     role = Math.floor(role);
@@ -108,15 +112,15 @@ bot.on('message', msg => {
                         if (err) throw err;
                     });
 
-                    msg.channel.send("The " + role + " role has been set to level " + roleLevel);
+                    msg.channel.send("The " + role + " role has been set to level " + roleLevel).then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
                 }
             } else {
-                msg.channel.send('You do not have admin permissions!');
+                msg.channel.send('You do not have admin permissions!').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
             }
         }
     } catch (err) {
         console.error(err);
-        msg.channel.send('An error occurred!')
+        msg.channel.send('An error occurred!').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
     }
 });
 
@@ -129,7 +133,7 @@ function getUserData(options, msg, rolesFile) {
             }
 
             // By Kiril
-            msg.channel.send('Updating roles');
+            msg.channel.send('Updating roles').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
             const contents = fs.readFileSync(rolesFile, 'utf8');
             const lines = contents.split('\n');
             const args = [];
@@ -156,7 +160,7 @@ function getUserData(options, msg, rolesFile) {
                     }
                 }
             }
-            msg.channel.send('Done setup. Use !bok help for help')
+            msg.channel.send('Done setup. Use !bok help for help').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
         })
         .catch((err) => {
             console.error(err);
@@ -169,7 +173,7 @@ function isAdmin(msg) {
 
 function createFile(path) {
     if (fs.existsSync(path)) {
-        return;
+
     } else {
         fs.appendFileSync(path, '', function (err) {
             if (err) throw err;
@@ -189,10 +193,6 @@ function checkID(IDnum, path) {
     }
 
     for (let i = 0; i < IDs.length; i++) {
-        if (IDnum === IDs[i]) {
-            return true;
-        } else {
-            return false;
-        }
+        return IDnum === IDs[i];
     }
 }
