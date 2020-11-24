@@ -6,8 +6,6 @@ const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 let roleLevel = 0;
 
-//
-
 bot.login(TOKEN);
 
 bot.on('ready', () => {
