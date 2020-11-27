@@ -1,8 +1,8 @@
 require('dotenv').config();
 const Discord = require('discord.js');
+const bot = new Discord.Client();
 const fs = require('fs');
 const rp = require('request-promise');
-const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 let roleLevel = 0;
 
@@ -11,7 +11,7 @@ bot.login(TOKEN).then(r => console.log('Used token: ' + r));
 bot.on('ready', () => {
     bot.user.setActivity("Star Wars", {type: "WATCHING"}).then(r => console.log(r));
     console.info(`Logged in as ${bot.user.tag}!`);
-    bot.channels.get('738439111412809730').send(':green_circle: Bot has started.')
+    bot.channels.cache.get('738439111412809730').send(':green_circle: Bot has started.')
 });
 
 const consoleListener = process.openStdin();
@@ -133,33 +133,39 @@ function getUserData(options, msg, rolesFile) {
             }
 
             // By Kiril
-            msg.channel.send('Updating roles').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
-            const contents = fs.readFileSync(rolesFile, 'utf8');
-            const lines = contents.split('\n');
-            const args = [];
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i] !== '') {
-                    args.push(lines[i].split(' '))
-                }
-            }
-            for (let userInfo of userData) {
-                if (userInfo[0] === undefined) {
-                    continue;
-                }
-                for (let arg of args) {
-                    const roleLevel = Number(arg[1]);
-                    if (Number(userInfo[1]) >= roleLevel) {
-                        const memberId = userInfo[0];
-                        const roleId = arg[0];
-                        const role = msg.guild.roles.get(roleId);
-                        const member = msg.guild.members.get(memberId);
-                        if (member === undefined) {
-                            break;
-                        }
-                        member.addRole(role);
+            msg.channel.send('Updating roles').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error)
+                .then(r => {
+                const contents = fs.readFileSync(rolesFile, 'utf8');
+                const lines = contents.split('\n');
+                const args = [];
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i] !== '') {
+                        args.push(lines[i].split(' '))
                     }
                 }
-            }
+                shuffle(userData);
+                for (let userInfo of userData) {
+                    let memberId = userInfo[0];
+                    if (memberId === undefined) {
+                        continue;
+                    }
+                    let member = msg.guild.members.cache.get(memberId)
+                    for (let arg of args) {
+                        let roleLevel = Number(arg[1]);
+                        let roleId = arg[0];
+                        let role = msg.guild.roles.cache.find(role => role.id === roleId);
+                        if (roleLevel === 0) {
+                            if (member !== undefined) {
+                                member.roles.add(role);
+                            }
+                        } else if (Number(userInfo[1]) >= roleLevel) {
+                            if (member !== undefined) {
+                                member.roles.add(role);
+                            }
+                        }
+                    }
+                }
+                });
             msg.channel.send('Done setup. Use !bok help for help').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`)).catch(console.error);
         })
         .catch((err) => {
@@ -195,4 +201,23 @@ function checkID(IDnum, path) {
     for (let i = 0; i < IDs.length; i++) {
         return IDnum === IDs[i];
     }
+}
+
+function shuffle(array) {
+    let currentIndex = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
 }
