@@ -21,14 +21,14 @@ consoleListener.addListener("data", res => {
         if (consoleMsg === 'test') {
             console.log('test successful');
         } else if (consoleMsg === 'restart' || consoleMsg === 'reboot') {
-            bot.channels.get('738439111412809730').send(':yellow_circle: Bot is restarting.')
+            bot.channels.cache.get('738439111412809730').send(':yellow_circle: Bot is restarting.')
                 .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`))
                 .then(msg => bot.destroy())
                 .then(() => bot.login(TOKEN))
                 .catch(console.error);
         } else if (consoleMsg === 'stop') {
             console.log('Stopping');
-            bot.channels.get('738439111412809730').send(':red_circle: Bot has stopped.')
+            bot.channels.cache.get('738439111412809730').send(':red_circle: Bot has stopped.')
                 .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, "\n\t")}`))
                 .then(msg => bot.destroy().then(process.exit(0)))
                 .catch(console.error);
