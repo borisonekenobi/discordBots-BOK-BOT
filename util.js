@@ -74,7 +74,9 @@ function checkID(IDnum, path) {
     }
 
     for (let i = 0; i < IDs.length; i++) {
-        return IDnum === IDs[i];
+        if (IDnum === IDs[i]) {
+            return IDnum === IDs[i];
+        }
     }
 }
 
