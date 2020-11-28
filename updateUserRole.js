@@ -1,4 +1,6 @@
-function updateUserRole(msg, msgContent, member, rolesFile, fs) {
+const fs = require('fs');
+
+function updateUserRole(msg, msgContent, member, rolesFile) {
     const msgArgs = msgContent.slice(0).split(' ');
     const lines = fs.readFileSync(rolesFile, 'utf8').split('\n');
     let args = [];
