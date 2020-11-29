@@ -41,6 +41,11 @@ bot.on('message', msg => {
         if (msg.author.id === '159985870458322944' && member !== undefined) {
             uur.updateUserRole(msg, msgContent, member, rolesFile, options);
 
+            // Tom Tbomb easter egg
+        } else if (msgContent === 'Tom') {
+            msg.channel.send('Tbomb!')
+                .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
+
 
         } else if (msgContent.startsWith(customPrefix)) {
             // test connection to bot
@@ -54,11 +59,6 @@ bot.on('message', msg => {
                 // displays admin help list
             } else if (msgContent === '!bok helpAdmin') {
                 ha.helpAdmin(msg);
-
-                // Tom Tbomb easter egg
-            } else if (msgContent === 'Tom') {
-                msg.channel.send('Tbomb!')
-                    .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
 
                 // starts scoring members on server (setup)
             } else if (msgContent === '!bok startScore') {
