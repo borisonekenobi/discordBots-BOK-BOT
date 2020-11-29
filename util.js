@@ -63,13 +63,9 @@ function createFile(path) {
 }
 
 function checkID(IDnum, path) {
-    createFile(path);
-    const data = fs.readFileSync(path, 'utf8');
-    const lines = data.split('\n');
-    const allArgs = [];
+    const allArgs = getFileData(path);
     const IDs = [];
-    for (let i = 0; i < lines.length; i++) {
-        allArgs.push(lines[i].split(' '));
+    for (let i = 0; i < allArgs.length; i++) {
         IDs.push(allArgs[i][0]);
     }
 
@@ -80,6 +76,17 @@ function checkID(IDnum, path) {
     }
 }
 
+function getFileData(path) {
+    createFile(path);
+    const data = fs.readFileSync(path, 'utf8');
+    const lines = data.split('\n');
+    const allArgs = [];
+    for (let i = 0; i < lines.length; i++) {
+        allArgs.push(lines[i].split(' '));
+    }
+    return allArgs;
+}
+
 function ready(bot) {
     bot.user.setActivity('Star Wars', {type: 'WATCHING'})
         .then(r => console.log(r));
@@ -87,4 +94,4 @@ function ready(bot) {
     bot.channels.cache.get('738439111412809730').send(':green_circle: Bot has started.')
 }
 
-module.exports = {getUserData, isAdmin, createFile, checkID, ready}
+module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, ready}
