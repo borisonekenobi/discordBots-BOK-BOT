@@ -1,8 +1,19 @@
+const ha = require('./helpAdmin.js');
+const hs = require('./helpStandard.js');
+
 function help(msg) {
-    msg.channel.send(
-        '!bok help - pulls up this list\n' +
-        '!bok helpAdmin - pulls up the help list for admins')
-        .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
+        // Displays standard help list
+    if (args [2] === undefined) {
+        hs.helpStandard(msg)
+
+        // Displays standard help list
+    } else if (msg.content.startsWith('!bok help standard')) {
+        hs.helpStandard(msg)
+
+        // Displays admin help list
+    } else if (msg.content.startsWith('!bok role edit')) {
+        ha.helpAdmin(msg)
+    }
 }
 
 module.exports = {help}

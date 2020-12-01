@@ -8,7 +8,6 @@ const util = require('./util.js');
 const uur = require('./updateUserRole.js');
 const test = require('./test.js');
 const help = require('./help.js');
-const ha = require('./helpAdmin.js');
 const ss = require('./startScore.js');
 const role = require('./role.js');
 const ci = require('./consoleInput.js');
@@ -52,19 +51,15 @@ bot.on('message', msg => {
             if (msgContent === '!bok test') {
                 test.test(msg);
 
-                // displays help list
-            } else if (msgContent === '!bok help') {
+                // all help commands
+            } else if (msgContent.startsWith('!bok help')) {
                 help.help(msg);
-
-                // displays admin help list
-            } else if (msgContent === '!bok helpAdmin') {
-                ha.helpAdmin(msg);
 
                 // starts scoring members on server (setup)
             } else if (msgContent === '!bok startScore') {
                 ss.startScore(msg, rolesFile, options);
 
-                // adding and removing roles from roleFile
+                // all role commands
             } else if (msgContent.startsWith('!bok role')) {
                 role.role(msg, msgContent, rolesFile);
             }
