@@ -9,7 +9,7 @@ function role(msg, msgContent, rolesFile) {
         const args = msgContent.slice(0).split(' ');
         // Checks if user has inputted function
         if (args [2] === undefined) {
-            msg.channel.send('That is an invalid role! Please mention a role.')
+            msg.channel.send('That is an invalid function! Please specify a function (add, edit, list, remove).')
                 .then(r => console.warn(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
 
             // Adds role to roleFile
@@ -27,12 +27,8 @@ function role(msg, msgContent, rolesFile) {
             // Removes role from roleFile
         } else if (msgContent.startsWith('!bok role remove')) {
             rr.roleRemove(msg, msgContent, rolesFile);
+        }
 
-            //
-        } /*else {
-        msg.channel.send('That is an invalid argument, please specify whether you are adding or removing role!')
-            .then(r => console.error(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
-    }*/
     } else {
         msg.channel.send('You do not have admin permissions!')
             .then(r => console.warn(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
