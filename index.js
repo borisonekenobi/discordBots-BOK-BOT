@@ -5,6 +5,7 @@ const TOKEN = process.env.TOKEN;
 const customPrefix = '!bok';
 
 const util = require('./util.js');
+const nm = require('./newMember.js');
 const uur = require('./updateUserRole.js');
 const test = require('./test.js');
 const help = require('./help.js');
@@ -25,6 +26,11 @@ consoleListener.addListener('data', res => {
     } catch (err) {
         console.error(err);
     }
+});
+
+bot.on('guildMemberAdd', member => {
+    const rolesFile = 'servers/' + member.guild.id + '.roles';
+    nm.newMember(member, rolesFile);
 });
 
 bot.on('message', msg => {
