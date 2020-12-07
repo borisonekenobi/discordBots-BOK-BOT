@@ -37,7 +37,7 @@ function updateUserRole(msg, msgContent, member, rolesFile, options) {
 
 function giveRole(msg, member, role, roleId) {
     if (member !== undefined) {
-        if (!msg.member.roles.cache.some((role) => role.id === roleId)) {
+        if (!member.roles.cache.some(r => r.id === roleId)) {
             try {
                 member.roles.add(role)
                     .then(console.log('Role ' + role.id + ' given to ' + member.id));
@@ -46,7 +46,7 @@ function giveRole(msg, member, role, roleId) {
                 msg.channel.send('An error occurred!')
                     .then(r => console.error(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
             }
-            msg.channel.send('Congratulations <@' + member.id + '>, you have just received the <@&' + role.id + '> role!')
+            msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!')
         }
     }
 }
