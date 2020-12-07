@@ -1,8 +1,9 @@
 const ha = require('./helpAdmin.js');
 const hs = require('./helpStandard.js');
 
-function help(msg) {
-        // Displays standard help list
+function help(msg, msgContent) {
+    const args = msgContent.slice(0).split(' ');
+    // Displays standard help list
     if (args [2] === undefined) {
         hs.helpStandard(msg)
 

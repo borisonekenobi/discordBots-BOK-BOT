@@ -59,7 +59,7 @@ bot.on('message', msg => {
 
                 // all help commands
             } else if (msgContent.startsWith('!bok help')) {
-                help.help(msg);
+                help.help(msg, msgContent);
 
                 // starts scoring members on server (setup)
             } else if (msgContent === '!bok startScore') {
