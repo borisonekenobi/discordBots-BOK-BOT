@@ -12,7 +12,7 @@ function help(msg, msgContent) {
         hs.helpStandard(msg)
 
         // Displays admin help list
-    } else if (msg.content.startsWith('!bok role admin')) {
+    } else if (msg.content.startsWith('!bok help admin')) {
         ha.helpAdmin(msg)
     }
 }
