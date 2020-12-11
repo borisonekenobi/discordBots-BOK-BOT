@@ -29,8 +29,10 @@ consoleListener.addListener('data', res => {
 });
 
 bot.on('guildMemberAdd', member => {
-    const rolesFile = 'servers/' + member.guild.id + '.roles';
-    nm.newMember(member, rolesFile);
+    if (member.bot) {
+        const rolesFile = 'servers/' + member.guild.id + '.roles';
+        nm.newMember(member, rolesFile);
+    }
 });
 
 bot.on('message', msg => {
@@ -46,28 +48,30 @@ bot.on('message', msg => {
         if (msg.author.id === '159985870458322944' && member !== undefined) {
             uur.updateUserRole(msg, msgContent, member, rolesFile, options);
 
+        } else if (!msg.author.bot) {
             // Tom Tbomb easter egg
-        } else if (msgContent === 'Tom') {
-            msg.channel.send('Tbomb!')
-                .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
+            if (msgContent === 'Tom') {
+                msg.channel.send('Tbomb!')
+                    .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
 
 
-        } else if (msgContent.startsWith(customPrefix)) {
-            // test connection to bot
-            if (msgContent === '!bok test') {
-                test.test(msg);
+            } else if (msgContent.startsWith(customPrefix)) {
+                // test connection to bot
+                if (msgContent === '!bok test') {
+                    test.test(msg);
 
-                // all help commands
-            } else if (msgContent.startsWith('!bok help')) {
-                help.help(msg, msgContent);
+                    // all help commands
+                } else if (msgContent.startsWith('!bok help')) {
+                    help.help(msg, msgContent);
 
-                // starts scoring members on server (setup)
-            } else if (msgContent === '!bok startScore') {
-                ss.startScore(msg, rolesFile, options);
+                    // starts scoring members on server (setup)
+                } else if (msgContent === '!bok startScore') {
+                    ss.startScore(msg, rolesFile, options);
 
-                // all role commands
-            } else if (msgContent.startsWith('!bok role')) {
-                role.role(msg, msgContent, rolesFile);
+                    // all role commands
+                } else if (msgContent.startsWith('!bok role')) {
+                    role.role(msg, msgContent, rolesFile);
+                }
             }
         }
     } catch (err) {
