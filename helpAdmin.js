@@ -3,8 +3,8 @@ const util = require('./util.js');
 function helpAdmin(msg) {
     if (util.isAdmin(msg)) {
         msg.channel.send(
-            '!bok helpAdmin - pulls up the help list for admins \n' +
-            '\tUSAGE: !bok helpAdmin \n\n' +
+            '!bok help admin - pulls up the help list for admins \n' +
+            '\tUSAGE: !bok help admin \n\n' +
 
             '!bok test - test connection to bot \n' +
             '\tUSAGE: !bok test \n\n' +
