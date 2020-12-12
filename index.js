@@ -29,7 +29,7 @@ consoleListener.addListener('data', res => {
 });
 
 bot.on('guildMemberAdd', member => {
-    if (member.bot) {
+    if (!member.user.bot) {
         const rolesFile = 'servers/' + member.guild.id + '.roles';
         nm.newMember(member, rolesFile);
     }
