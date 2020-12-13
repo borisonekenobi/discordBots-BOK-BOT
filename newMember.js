@@ -1,6 +1,8 @@
 const fs = require('fs');
 const rp = require('request-promise');
 
+const util = require('./util.js')
+
 function newMember(member, rolesFile, options) {
     let userData = [];
     rp(options)
@@ -31,27 +33,14 @@ function newMember(member, rolesFile, options) {
                         let roleId = arg[0];
                         let role = member.guild.roles.cache.find(role => role.id === roleId);
                         if (roleLevel === 0) {
-                            giveRole(member, role, roleId)
+                            util.giveRole(member, role, roleId)
                         } else if (Number(userInfo[1]) >= roleLevel) {
-                            giveRole(member, role, roleId)
+                            util.giveRole(member, role, roleId)
                         }
                     }
                 }
             }
         });
-}
-
-function giveRole(member, role, roleId) {
-    if (member !== undefined) {
-        if (!member.roles.cache.some((role) => role.id === roleId)) {
-            try {
-                member.roles.add(role)
-                    .then(console.log('Role ' + role.id + ' given to ' + member.id));
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    }
 }
 
 module.exports = {newMember}

@@ -1,6 +1,8 @@
 const fs = require('fs');
 const rp = require('request-promise');
 
+const util = require('./util.js');
+
 function updateUserRole(msg, msgContent, member, rolesFile, options) {
     const userData = [];
     rp(options)
@@ -25,9 +27,10 @@ function updateUserRole(msg, msgContent, member, rolesFile, options) {
                         let roleId = arg[0];
                         let role = msg.guild.roles.cache.find(role => role.id === roleId);
                         if (roleLevel === 0) {
-                            giveRole(msg, member, role, roleId)
+                            util.giveRole(member, role, roleId)
                         } else if (Number(userInfo[1]) >= roleLevel) {
-                            giveRole(msg, member, role, roleId)
+                            util.giveRole(member, role, roleId)
+                            msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!')
                         }
                     }
                 }
@@ -35,20 +38,4 @@ function updateUserRole(msg, msgContent, member, rolesFile, options) {
         });
 }
 
-function giveRole(msg, member, role, roleId) {
-    if (member !== undefined) {
-        if (!member.roles.cache.some(r => r.id === roleId)) {
-            try {
-                member.roles.add(role)
-                    .then(console.log('Role ' + role.id + ' given to ' + member.id));
-            } catch (err) {
-                console.error(err);
-                msg.channel.send('An error occurred!')
-                    .then(r => console.error(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
-            }
-            msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!')
-        }
-    }
-}
-
-module.exports = {updateUserRole, giveRole}
+module.exports = {updateUserRole}

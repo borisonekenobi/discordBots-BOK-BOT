@@ -31,11 +31,11 @@ function getUserData(options, msg, rolesFile) {
                             let role = msg.guild.roles.cache.find(role => role.id === roleId);
                             if (roleLevel === 0) {
                                 if (member !== undefined) {
-                                    member.roles.add(role).then(console.log('\t\tRole ' + role.id + ' given to ' + member.id));
+                                    giveRole(member, role, role.id);
                                 }
                             } else if (Number(userInfo[1]) >= roleLevel) {
                                 if (member !== undefined) {
-                                    member.roles.add(role).then(console.log('\t\tRole ' + role.id + ' given to ' + member.id));
+                                    giveRole(member, role, role.id);
                                 }
                             }
                         }
@@ -87,6 +87,19 @@ function getFileData(path) {
     return allArgs;
 }
 
+function giveRole(member, role, roleId) {
+    if (member !== undefined) {
+        if (!member.roles.cache.some((role) => role.id === roleId)) {
+            try {
+                member.roles.add(role)
+                    .then(console.log('Role ' + role.id + ' given to ' + member.id));
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+}
+
 function ready(bot) {
     bot.user.setActivity('Star Wars', {type: 'WATCHING'})
         .then(r => console.log(r));
@@ -94,4 +107,4 @@ function ready(bot) {
     bot.channels.cache.get('738439111412809730').send(':green_circle: Bot has started.')
 }
 
-module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, ready}
+module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, giveRole, ready}
