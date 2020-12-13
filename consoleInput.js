@@ -1,6 +1,7 @@
 const ct = require('./consoleTest.js');
 const cr = require('./consoleRestart.js');
 const cs = require('./consoleStop.js');
+const cv = require('./consoleVersion');
 
 function consoleInput(bot, res) {
     const consoleMsg = res.toString().toLocaleLowerCase().trim().split(/ +/g).join(' ');
@@ -12,6 +13,9 @@ function consoleInput(bot, res) {
 
     } else if (consoleMsg === 'stop') {
         cs.consoleStop(bot);
+
+    } else if (consoleMsg === 'version') {
+        cv.consoleVersion();
     }
 }
 
