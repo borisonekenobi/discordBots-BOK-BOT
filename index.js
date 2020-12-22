@@ -54,7 +54,7 @@ bot.on('message', msg => {
             url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + serverID,
             json: true
         }
-        if (msg.author.id === '159985870458322944' && member !== undefined || msg.author.id === '360377836479053826' && member !== undefined) {
+        if (msg.author.id === '159985870458322944' && member !== undefined) {
             uur.updateUserRole(msg, msgContent, member, rolesFile, options);
 
         } else if (!msg.author.bot) {
