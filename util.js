@@ -10,7 +10,7 @@ function getUserData(options, msg, rolesFile) {
             }
 
             msg.channel.send('Updating roles').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error)
-                .then(r => {
+                .then(() => {
                     const contents = fs.readFileSync(rolesFile, 'utf8');
                     const lines = contents.split('\n');
                     const args = [];
@@ -41,7 +41,7 @@ function getUserData(options, msg, rolesFile) {
                         }
                     }
                 })
-                .then(r => {
+                .then(() => {
                     msg.channel.send('Done setup. Use !bok help for help').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
                 });
         })
@@ -87,16 +87,25 @@ function getFileData(path) {
     return allArgs;
 }
 
-function giveRole(member, role, roleId) {
+function giveRole(member, role, roleId, msg = undefined) {
     if (member !== undefined) {
         if (!member.roles.cache.some((role) => role.id === roleId)) {
             try {
                 member.roles.add(role)
-                    .then(console.log('Role ' + role.id + ' given to ' + member.id));
+                    .then(() => {
+                        if (msg !== undefined) {
+                            msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!');
+                        }
+                    })
+                    .then(console.log(member.id + ' awarded ' + role.id + ' role'));
             } catch (err) {
                 console.error(err);
             }
+        } else {
+            console.log(member.id + ' already has ' + role.id + ', no role awarded');
         }
+    } else {
+        console.error('member is undefined');
     }
 }
 

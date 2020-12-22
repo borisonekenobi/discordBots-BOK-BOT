@@ -29,8 +29,7 @@ function updateUserRole(msg, msgContent, member, rolesFile, options) {
                         if (roleLevel === 0) {
                             util.giveRole(member, role, roleId)
                         } else if (Number(userInfo[1]) >= roleLevel) {
-                            util.giveRole(member, role, roleId)
-                            msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!')
+                            util.giveRole(member, role, roleId, msg)
                         }
                     }
                 }
