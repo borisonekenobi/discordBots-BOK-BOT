@@ -12,7 +12,7 @@ function newMember(member, rolesFile, options) {
                     userData.push([user.id, user.level]);
                 }
             }
-            if (userData === []) {
+            if (userData.length === 0) {
                 userData.push([member.id, 0]);
             }
 

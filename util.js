@@ -89,20 +89,24 @@ function getFileData(path) {
 
 function giveRole(member, role, roleId, msg = undefined) {
     if (member !== undefined) {
-        if (!member.roles.cache.some((role) => role.id === roleId)) {
-            try {
-                member.roles.add(role)
-                    .then(() => {
-                        if (msg !== undefined) {
-                            msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!');
-                        }
-                    })
-                    .then(console.log(member.id + ' awarded ' + role.id + ' role'));
-            } catch (err) {
-                console.error(err);
+        if (role !== undefined) {
+            if (!member.roles.cache.some(role => role.id === roleId)) {
+                try {
+                    member.roles.add(role)
+                        .then(() => {
+                            if (msg !== undefined) {
+                                msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!');
+                            }
+                        })
+                        .then(console.log(member.id + ' awarded ' + role.id + ' role'));
+                } catch (err) {
+                    console.error(err);
+                }
+            } else {
+                console.log(member.id + ' already has ' + role.id + ', no role awarded');
             }
         } else {
-            console.log(member.id + ' already has ' + role.id + ', no role awarded');
+            console.log('role is undefined')
         }
     } else {
         console.error('member is undefined');

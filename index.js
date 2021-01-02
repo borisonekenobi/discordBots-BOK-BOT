@@ -6,6 +6,7 @@ const customPrefix = '!bok';
 
 const util = require('./util.js');
 const nm = require('./newMember.js');
+const nbm = require('./newBotMember.js');
 const uur = require('./updateUserRole.js');
 const test = require('./test.js');
 const help = require('./help.js');
@@ -30,17 +31,20 @@ consoleListener.addListener('data', res => {
 
 bot.on('guildMemberAdd', member => {
     const serverID = member.guild.id;
-    if (!member.user.bot) {
+    if (!member.user.bot) { //not bot
         const options = {
             url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + serverID,
             json: true
         };
-        const rolesFile = 'servers/' + member.guild.id + '.roles';
+        const rolesFile = 'servers/' + serverID + '.roles';
         nm.newMember(member, rolesFile, options);
-    /*} else if (member.user.bot) {
 
-    } else {*/
+    } else if (member.user.bot) { //is bot
+        const botRolesFile = 'servers/' + serverID + '.botroles';
+        nbm.newBotMember(member, botRolesFile);
 
+    } else {
+        console.log('member\'s user.bot is neither true nor false, no roles awarded')
     }
 });
 
