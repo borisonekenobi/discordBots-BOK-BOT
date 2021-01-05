@@ -7,6 +7,15 @@ const cc = require('./consoleCrash.js');
 
 function consoleHelp(consoleMsg) {
     if (consoleMsg === 'help' || consoleMsg === 'help -a' || consoleMsg === 'help --all') {
+        console.log('Type \'help --command\' to find out more about the function \'command\'.');
+        console.log();
+        console.log(' crash [E]');
+        console.log(' help [-a]');
+        console.log(' pull');
+        console.log(' restart');
+        console.log(' stop');
+        console.log(' test');
+        console.log(' version');
         //TODO: List all commands
 
     } else if (consoleMsg === 'help --test') {
@@ -37,7 +46,8 @@ function consoleHelp(consoleMsg) {
 }
 
 function help() {
-    console.log('Currently being worked on');
+    console.log('help [-a|--all]');
+    console.log('    Display information about commands.');
 }
 
 module.exports = {consoleHelp}

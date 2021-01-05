@@ -3,7 +3,8 @@ function consoleTest() {
 }
 
 function help() {
-    console.log('Currently being worked on');
+    console.log('test');
+    console.log('    Tests whether the bot is on.');
 }
 
 module.exports = {consoleTest, help}

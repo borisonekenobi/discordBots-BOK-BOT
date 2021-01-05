@@ -4,7 +4,8 @@ function consoleVersion() {
 }
 
 function help() {
-    console.log('Currently being worked on');
+    console.log('version');
+    console.log('    Displays current bot version.');
 }
 
 module.exports = {consoleVersion, help}

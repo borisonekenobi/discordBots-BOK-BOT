@@ -26,12 +26,17 @@ function consoleInput(bot, res) {
     } else if (consoleMsg.startsWith('help')) {
         ch.consoleHelp(consoleMsg);
 
-    } else if (consoleMsg === 'crash') {
-        cc.consoleCrash();
+    } else if (consoleMsg.startsWith('crash')) {
+        if (consoleMsg === 'crash') {
+            cc.consoleCrash();
+        } else {
+            let errorMsg = consoleMsg.substr(consoleMsg.indexOf(" ") + 1);
+            cc.consoleCrash(errorMsg);
+        }
 
     } else {
         console.log(consoleMsg + ': command not found')
-        console.log('use \'help --all\' for help')
+        console.log('Use \'help --all\' for help.')
 
     }
 }

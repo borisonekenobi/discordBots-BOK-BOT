@@ -11,7 +11,8 @@ function consoleRestart(bot) {
 }
 
 function help() {
-    console.log('Currently being worked on');
+    console.log('restart|reboot');
+    console.log('    Restarts the bot.');
 }
 
 function reboot(bot) {
