@@ -1,4 +1,4 @@
-const ready = require('./util.js');
+const util = require('./util.js');
 
 const Discord = require('discord.js');
 const TOKEN = process.env.TOKEN;
@@ -10,13 +10,17 @@ function consoleRestart(bot) {
         .catch(console.error);
 }
 
+function help() {
+    console.log('Currently being worked on');
+}
+
 function reboot(bot) {
     bot.destroy();
     bot = new Discord.Client();
     bot.login(TOKEN).then(r => console.log('Used token: ' + r));
     bot.on('ready', () => {
-        ready.ready(bot)
+        util.ready(bot)
     });
 }
 
-module.exports = {consoleRestart}
+module.exports = {consoleRestart, help}

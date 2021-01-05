@@ -6,4 +6,8 @@ function consoleStop(bot) {
         .catch(console.error);
 }
 
-module.exports = {consoleStop}
+function help() {
+    console.log('Currently being worked on');
+}
+
+module.exports = {consoleStop, help}

@@ -91,17 +91,13 @@ function giveRole(member, role, roleId, msg = undefined) {
     if (member !== undefined) {
         if (role !== undefined) {
             if (!member.roles.cache.some(role => role.id === roleId)) {
-                try {
-                    member.roles.add(role)
-                        .then(() => {
-                            if (msg !== undefined) {
-                                msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!');
-                            }
-                        })
-                        .then(console.log(member.id + ' awarded ' + role.id + ' role'));
-                } catch (err) {
-                    console.error(err);
-                }
+                member.roles.add(role)
+                    .then(() => {
+                        if (msg !== undefined) {
+                            msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!');
+                        }
+                    })
+                    .then(console.log(member.id + ' awarded ' + role.id + ' role'));
             } else {
                 console.log(member.id + ' already has ' + role.id + ', no role awarded');
             }
@@ -120,4 +116,18 @@ function ready(bot) {
     bot.channels.cache.get('738439111412809730').send(':green_circle: Bot has started.')
 }
 
-module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, giveRole, ready}
+function createLog(err) {
+    let date_ob = new Date();
+    let date = ('0' + date_ob.getDate()).slice(-2);
+    let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
+    let year = date_ob.getFullYear();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    let seconds = date_ob.getSeconds();
+    let logFile = year + '-' + month + '-' + date + '-' + hours + '-' + minutes + '-' + seconds + '.log';
+
+    fs.appendFileSync('logs\\' + logFile, err);
+    console.error('An error occurred! Error info saved to ' + logFile)
+}
+
+module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, giveRole, ready, createLog}

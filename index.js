@@ -2,7 +2,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 let bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
-const customPrefix = '!bok';
+const prefix = '!bok';
 
 const util = require('./util.js');
 const nm = require('./newMember.js');
@@ -25,26 +25,30 @@ consoleListener.addListener('data', res => {
     try {
         ci.consoleInput(bot, res)
     } catch (err) {
-        console.error(err);
+        util.createLog(err);
     }
 });
 
 bot.on('guildMemberAdd', member => {
-    const serverID = member.guild.id;
-    if (!member.user.bot) { //not bot
-        const options = {
-            url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + serverID,
-            json: true
-        };
-        const rolesFile = 'servers/' + serverID + '.roles';
-        nm.newMember(member, rolesFile, options);
+    try {
+        const serverID = member.guild.id;
+        if (!member.user.bot) { //not bot
+            const options = {
+                url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + serverID,
+                json: true
+            };
+            const rolesFile = 'servers/' + serverID + '.roles';
+            nm.newMember(member, rolesFile, options);
 
-    } else if (member.user.bot) { //is bot
-        const botRolesFile = 'servers/' + serverID + '.botroles';
-        nbm.newBotMember(member, botRolesFile);
+        } else if (member.user.bot) { //is bot
+            const botRolesFile = 'servers/' + serverID + '.botroles';
+            nbm.newBotMember(member, botRolesFile);
 
-    } else {
-        console.log('member\'s user.bot is neither true nor false, no roles awarded')
+        } else {
+            console.log('member\'s user.bot is neither true nor false, no roles awarded')
+        }
+    } catch (err) {
+        util.createLog(err);
     }
 });
 
@@ -68,7 +72,7 @@ bot.on('message', msg => {
                     .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
 
 
-            } else if (msgContent.startsWith(customPrefix)) {
+            } else if (msgContent.startsWith(prefix)) {
                 // test connection to bot
                 if (msgContent === '!bok test') {
                     test.test(msg);
@@ -88,7 +92,7 @@ bot.on('message', msg => {
             }
         }
     } catch (err) {
-        console.error(err);
+        util.createLog(err);
         msg.channel.send('An error occurred!')
             .then(r => console.error(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
     }

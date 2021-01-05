@@ -3,4 +3,8 @@ function consoleVersion() {
     console.log(p.version);
 }
 
-module.exports = {consoleVersion}
+function help() {
+    console.log('Currently being worked on');
+}
+
+module.exports = {consoleVersion, help}
