@@ -32,16 +32,19 @@ consoleListener.addListener('data', res => {
 bot.on('guildMemberAdd', member => {
     try {
         const serverID = member.guild.id;
+        const rolesFile = 'servers/' + serverID + '.roles';
+        const botRolesFile = 'servers/' + serverID + '.botroles';
+        util.createFile(rolesFile);
+        util.createFile(botRolesFile);
+
         if (!member.user.bot) { //not bot
             const options = {
                 url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + serverID,
                 json: true
             };
-            const rolesFile = 'servers/' + serverID + '.roles';
             nm.newMember(member, rolesFile, options);
 
         } else if (member.user.bot) { //is bot
-            const botRolesFile = 'servers/' + serverID + '.botroles';
             nbm.newBotMember(member, botRolesFile);
 
         } else {
