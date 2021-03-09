@@ -1,6 +1,5 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-const requests = require('requests.js');
 let bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 const prefix = '!bok';
