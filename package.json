@@ -1,20 +1,23 @@
 {
   "name": "discord-bot",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "Discord bot for SitePoint",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Michiel Mulders",
+  "author": "Boris Vasilev",
   "license": "ISC",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "cli-table": "^0.3.1",
+    "cheerio": "^1.0.0-rc.5",
+    "cli-table": "^0.3.5",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
-    "prism-media": "^1.2.2",
+    "node-fetch": "^2.6.1",
+    "prism-media": "^1.2.7",
     "request": "^2.88.2",
-    "request-promise": "^4.2.6"
+    "request-promise": "^4.2.6",
+    "requests": "^0.3.0",
+    "requests.js": "^1.0.0"
   }
 }

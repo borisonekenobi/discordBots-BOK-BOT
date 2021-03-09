@@ -1,5 +1,6 @@
 require('dotenv').config();
 const Discord = require('discord.js');
+const requests = require('requests.js');
 let bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 const prefix = '!bok';
@@ -28,6 +29,15 @@ consoleListener.addListener('data', res => {
         util.createLog(err);
     }
 });
+
+bot.ws.on('INTERACTION_CREATE', async interaction => {
+    bot.api.interactions(interaction.id, interaction.token).callback.post({data: {
+            type: 4,
+            data: {
+                content: 'Interactions are currently not working. Please check back at a later time.'
+            }
+        }})
+})
 
 bot.on('guildMemberAdd', member => {
     try {
