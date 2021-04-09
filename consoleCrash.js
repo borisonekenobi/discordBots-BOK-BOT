@@ -1,4 +1,4 @@
-function consoleCrash(E = 'No error provided') {
+function consoleCrash(E = 'Unknown error') {
     throw E;
 }
 

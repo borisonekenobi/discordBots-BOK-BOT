@@ -1,57 +1,53 @@
 const fs = require('fs');
 const rp = require('request-promise');
 
-function getUserData(options, msg, rolesFile) {
+function getUserData(options, guild, rolesFile) {
     const userData = [];
-    rp(options)
-        .then((data) => {
-            for (let user of data.players) {
-                userData.push([user.id, user.level]);
+    rp(options).then((data) => {
+        for (let user of data.players) {
+            userData.push([user.id, user.level]);
+        }
+
+
+        const contents = fs.readFileSync(rolesFile, 'utf8');
+        const lines = contents.split('\n');
+        const args = [];
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i] !== '') {
+                args.push(lines[i].split(' '));
+            }
+        }
+        for (let userInfo of userData) {
+            let memberID = userInfo[0];
+            if (memberID === undefined) {
+                continue;
             }
 
-            msg.channel.send('Updating roles').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error)
-                .then(() => {
-                    const contents = fs.readFileSync(rolesFile, 'utf8');
-                    const lines = contents.split('\n');
-                    const args = [];
-                    for (let i = 0; i < lines.length; i++) {
-                        if (lines[i] !== '') {
-                            args.push(lines[i].split(' '));
-                        }
+            let member = guild.members.cache.get(memberID);
+            for (let arg of args) {
+                let roleLevel = Number(arg[1]);
+                let roleID = arg[0];
+                let role = guild.roles.cache.find(role => role.id === roleID);
+                if (roleLevel === 0) {
+                    if (member !== undefined) {
+                        giveRole(member, role, role.id);
                     }
-                    for (let userInfo of userData) {
-                        let memberId = userInfo[0];
-                        if (memberId === undefined) {
-                            continue;
-                        }
-                        let member = msg.guild.members.cache.get(memberId);
-                        for (let arg of args) {
-                            let roleLevel = Number(arg[1]);
-                            let roleId = arg[0];
-                            let role = msg.guild.roles.cache.find(role => role.id === roleId);
-                            if (roleLevel === 0) {
-                                if (member !== undefined) {
-                                    giveRole(member, role, role.id);
-                                }
-                            } else if (Number(userInfo[1]) >= roleLevel) {
-                                if (member !== undefined) {
-                                    giveRole(member, role, role.id);
-                                }
-                            }
-                        }
+                } else if (Number(userInfo[1]) >= roleLevel) {
+                    if (member !== undefined) {
+                        giveRole(member, role, role.id);
                     }
-                })
-                .then(() => {
-                    msg.channel.send('Done setup. Use !bok help for help').then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
-                });
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+                }
+            }
+        }
+    }).catch((err) => {
+        createLog(err);
+    });
+
+    return 'Done setup. Use !bok help for help';
 }
 
-function isAdmin(msg) {
-    return msg.guild.member(msg.author).hasPermission('ADMINISTRATOR') || msg.author.id === '360377836479053826';
+function isAdmin(user) {
+    return user.hasPermission('ADMINISTRATOR') || user.id === '360377836479053826';
 }
 
 function createFile(path) {
@@ -87,10 +83,10 @@ function getFileData(path) {
     return allArgs;
 }
 
-function giveRole(member, role, roleId, msg = undefined) {
+function giveRole(member, role, roleID, msg = undefined) {
     if (member !== undefined) {
         if (role !== undefined) {
-            if (!member.roles.cache.some(role => role.id === roleId)) {
+            if (!member.roles.cache.some(role => role.id === roleID)) {
                 member.roles.add(role)
                     .then(() => {
                         if (msg !== undefined) {
@@ -117,17 +113,21 @@ function ready(bot) {
 }
 
 function createLog(err) {
-    let date_ob = new Date();
-    let date = ('0' + date_ob.getDate()).slice(-2);
-    let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
-    let year = date_ob.getFullYear();
-    let hours = date_ob.getHours();
-    let minutes = date_ob.getMinutes();
-    let seconds = date_ob.getSeconds();
-    let logFile = year + '-' + month + '-' + date + '-' + hours + '-' + minutes + '-' + seconds + '.log';
+    try {
+        let date_ob = new Date();
+        let date = ('0' + date_ob.getDate()).slice(-2);
+        let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
+        let year = date_ob.getFullYear();
+        let hours = date_ob.getHours();
+        let minutes = date_ob.getMinutes();
+        let seconds = date_ob.getSeconds();
+        let logFile = year + '-' + month + '-' + date + '-' + hours + '-' + minutes + '-' + seconds + '.log';
 
-    fs.appendFileSync('logs\\' + logFile, err);
-    console.error('An error occurred! Error info saved to ' + logFile)
+        fs.appendFileSync('logs/' + logFile, err);
+        console.error('An error occurred! Error info saved to ' + logFile)
+    } catch (e) {
+        console.error(err);
+    }
 }
 
 module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, giveRole, ready, createLog}

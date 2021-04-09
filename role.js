@@ -4,34 +4,24 @@ const re = require('./roleEdit.js');
 const rl = require('./roleList.js');
 const rr = require('./roleRemove.js');
 
-function role(msg, msgContent, rolesFile) {
-    if (util.isAdmin(msg)) {
-        const args = msgContent.slice(0).split(' ');
-        // Checks if user has inputted function
-        if (args [2] === undefined) {
-            msg.channel.send('That is an invalid function! Please specify a function (add, edit, list, remove).')
-                .then(r => console.warn(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
+function role(interaction, author, rolesFile, guild) {
+    if (util.isAdmin(author)) {
+        let name = interaction.data.options[0].name
+        switch (name) {
+            case 'add':
+                return ra.roleAdd(interaction, rolesFile);
 
-            // Adds role to roleFile
-        } else if (msgContent.startsWith('!bok role add')) {
-            ra.roleAdd(msg, msgContent, rolesFile);
+            case 'edit':
+                return re.roleEdit(interaction, rolesFile);
 
-            // Edits role in roleFile
-        } else if (msgContent.startsWith('!bok role edit')) {
-            re.roleEdit(msg, msgContent, rolesFile);
+            case 'list':
+                return rl.roleList(interaction, rolesFile, guild);
 
-            // Lists all setup roles
-        } else if (msgContent.startsWith('!bok role list')) {
-            rl.roleList(msg, msgContent, rolesFile);
-
-            // Removes role from roleFile
-        } else if (msgContent.startsWith('!bok role remove')) {
-            rr.roleRemove(msg, msgContent, rolesFile);
+            case 'remove':
+                return rr.roleRemove(interaction, rolesFile);
         }
-
     } else {
-        msg.channel.send('You do not have admin permissions!')
-            .then(r => console.warn(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
+        return 'You do not have admin permissions!';
     }
 }
 
