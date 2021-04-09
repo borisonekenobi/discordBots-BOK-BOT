@@ -1,4 +1,4 @@
-# BOKBOT
+# BOK BOT
 
 Made by Borisonekenbi.
 
