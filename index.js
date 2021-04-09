@@ -9,6 +9,7 @@ const nbm = require('./newBotMember.js');
 const uur = require('./updateUserRole.js');
 const ci = require('./consoleInput.js');
 
+const react = require('./reactionRole.js');
 const role = require('./role.js');
 const score = require('./startScore.js');
 const test = require('./test.js');
@@ -39,6 +40,10 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let name = interaction.data.name;
         let content = '';
         switch (name){
+            case 'reactionrole':
+                content = react;
+                break;
+
             case 'role':
                 content = role.role(interaction, author, rolesFile, guild);
                 break;
@@ -113,15 +118,11 @@ bot.on('message', msg => {
         } else if (!msg.author.bot) {
             // Tom Tbomb easter egg
             if (msgContent === 'Tom') {
-                msg.channel.send('Tbomb!')
-                    .then(r => console.log(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
-
-
+                msg.channel.send('Tbomb!');
             }
         }
     } catch (err) {
         util.createLog(err);
-        msg.channel.send('An error occurred!')
-            .then(r => console.error(`Sent message: \n\t${r.content.replace(/\r?\n|\r/g, '\n\t')}`)).catch(console.error);
+        msg.channel.send('An error occurred!');
     }
 });
