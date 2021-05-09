@@ -4,15 +4,16 @@ let bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 
 const util = require('./util.js');
-const nm = require('./newMember.js');
-const nbm = require('./newBotMember.js');
-const uur = require('./updateUserRole.js');
-const ci = require('./consoleInput.js');
+const newMember = require('./commands/newMember/execute.js');
+const newBotMember = require('./commands/newBotMember/execute.js');
+const updateUserRole = require('./commands/updateUserRole/execute.js');
+const consoleInput = require('./commands/console/input.js');
 
-const react = require('./reactionRole.js');
-const role = require('./role.js');
-const score = require('./startScore.js');
-const test = require('./test.js');
+const logs = require('./commands/serverLogs/execute.js');
+const reactionRole = require('./commands/reactionRole/execute.js');
+const role = require('./commands/role/execute.js');
+const startScore = require('./commands/startScore/execute.js');
+const test = require('./commands/test/execute.js');
 
 bot.login(TOKEN).then(r => console.log('Used token: ' + r));
 
@@ -23,7 +24,7 @@ bot.on('ready', () => {
 const consoleListener = process.openStdin();
 consoleListener.addListener('data', res => {
     try {
-        ci.consoleInput(bot, res)
+        consoleInput.input(bot, res)
     } catch (err) {
         util.createLog(err);
     }
@@ -31,36 +32,37 @@ consoleListener.addListener('data', res => {
 
 bot.ws.on('INTERACTION_CREATE', async interaction => {
     try {
-        //console.log(interaction);
+        console.log(interaction);
         let guildID = interaction.guild_id;
         let guild = bot.guilds.cache.get(guildID);
         let authorID = interaction.member.user.id;
         let author = guild.members.cache.get(authorID);
         let rolesFile = 'servers/' + guildID + '.roles';
         let name = interaction.data.name;
-        let content = '';
+        let content = 'An error occurred and a response could not be generated';
+
         switch (name){
+            case 'logs':
+                content = logs.execute(interaction, author, guild);
+                break;
+
             case 'reactionrole':
-                content = react;
+                content = reactionRole.execute(interaction, author, rolesFile);
                 break;
 
             case 'role':
-                content = role.role(interaction, author, rolesFile, guild);
+                content = role.execute(interaction, author, rolesFile, guild);
                 break;
 
             case 'startscore':
-                content = score.startScore(interaction, author, guild, rolesFile, {
+                content = startScore.execute(interaction, author, guild, rolesFile, {
                     url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
                     json: true
                 });
                 break;
 
             case 'test':
-                content = test.test();
-        }
-
-        if (content === '') {
-            content = 'An error occurred and a response could not be generated';
+                content = test.execute();
         }
 
         bot.api.interactions(interaction.id, interaction.token).callback.post({
@@ -89,10 +91,10 @@ bot.on('guildMemberAdd', member => {
                 url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + serverID,
                 json: true
             };
-            nm.newMember(member, rolesFile, options);
+            newMember.execute(member, rolesFile, options);
 
         } else if (member.user.bot) { //is bot
-            nbm.newBotMember(member, botRolesFile);
+            newBotMember.execute(member, botRolesFile);
 
         } else {
             console.log('member\'s user.bot is neither true nor false, no roles given');
@@ -113,7 +115,7 @@ bot.on('message', msg => {
             json: true
         }
         if (msg.author.id === '159985870458322944' && member !== undefined) {
-            uur.updateUserRole(msg, msgContent, member, rolesFile, options);
+            updateUserRole.execute(msg, msgContent, member, rolesFile, options);
 
         } else if (!msg.author.bot) {
             // Tom Tbomb easter egg
