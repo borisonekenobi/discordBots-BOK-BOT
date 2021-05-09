@@ -56,6 +56,7 @@ function createFile(path) {
     } else {
         fs.appendFileSync(path, '');
     }
+    return path;
 }
 
 function checkID(IDnum, path) {

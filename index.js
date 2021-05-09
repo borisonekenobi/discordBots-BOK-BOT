@@ -32,7 +32,7 @@ consoleListener.addListener('data', res => {
 
 bot.ws.on('INTERACTION_CREATE', async interaction => {
     try {
-        console.log(interaction);
+        //console.log(interaction);
         let guildID = interaction.guild_id;
         let guild = bot.guilds.cache.get(guildID);
         let authorID = interaction.member.user.id;
