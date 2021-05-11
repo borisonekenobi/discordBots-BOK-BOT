@@ -15,6 +15,8 @@ const role = require('./commands/role/execute.js');
 const startScore = require('./commands/startScore/execute.js');
 const test = require('./commands/test/execute.js');
 
+const log = require('./commands/serverLogs/log.js');
+
 bot.login(TOKEN).then(r => console.log('Used token: ' + r));
 
 bot.on('ready', () => {
@@ -80,15 +82,18 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
 
 bot.on('guildMemberAdd', member => {
     try {
-        const serverID = member.guild.id;
-        const rolesFile = 'servers/' + serverID + '.roles';
-        const botRolesFile = 'servers/' + serverID + '.botroles';
+        const guild = member.guild;
+        const guildID = guild.id;
+        const rolesFile = 'servers/' + guildID + '.roles';
+        const botRolesFile = 'servers/' + guildID + '.botroles';
         util.createFile(rolesFile);
         util.createFile(botRolesFile);
 
+        log.log(types.JOINED, guild, member);
+
         if (!member.user.bot) { //not bot
             const options = {
-                url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + serverID,
+                url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
                 json: true
             };
             newMember.execute(member, rolesFile, options);
@@ -128,3 +133,24 @@ bot.on('message', msg => {
         msg.channel.send('An error occurred!');
     }
 });
+
+const types = require('./types.js')
+
+bot.on('messageUpdate', (oldMessage, newMessage) => {
+    try {
+        log.log(types.EDITED, oldMessage.channel.guild, oldMessage, newMessage);
+    } catch (err) {
+        util.createLog(err);
+        oldMessage.channel.send('An error occurred!');
+    }
+});
+
+bot.on("messageDelete", (deleteMessage) => {
+    try {
+        log.log(types.DELETED, deleteMessage.channel.guild, deleteMessage);
+    } catch (err) {
+        util.createLog(err);
+        deleteMessage.channel.send('An error occurred!');
+    }
+});
+
