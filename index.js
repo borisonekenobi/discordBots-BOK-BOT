@@ -154,3 +154,10 @@ bot.on("messageDelete", (deleteMessage) => {
     }
 });
 
+bot.on('guildMemberRemove', member => {
+    try {
+        log.log(types.LEFT, member.guild, member);
+    } catch (err) {
+        util.createLog(err);
+    }
+});
