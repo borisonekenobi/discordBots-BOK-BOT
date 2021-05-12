@@ -3,13 +3,14 @@ const util = require('../../util.js');
 function list(interaction, rolesFile, guild) {
     util.createFile(rolesFile);
     const allArgs = util.getFileData(rolesFile);
-    let send = '';
+    let fields = [];
     for (let i = 0; i < allArgs.length - 1; i++) {
-        let role = guild.roles.cache.get(allArgs[i][0]).name;
-        send = send + role + ' --> ' + allArgs[i][1] + '\n'
+        let role = guild.roles.cache.find(role => role.id === allArgs[i][0]);
+        let level = allArgs[i][1].trim() === '0' ? 'Join Server:' : 'Level ' + allArgs[i][1].trim() + ':';
+        fields.push({name: level, value: role.toString()});
     }
 
-    return send;
+    return util.createEmbed('#00FF00', '', '', '', '', '', 'All roles and their levels', '', fields);
 }
 
 module.exports = {roleList: list}

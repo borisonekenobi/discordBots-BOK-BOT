@@ -5,23 +5,23 @@ const rl = require('./list.js');
 const rr = require('./remove.js');
 
 function execute(interaction, author, rolesFile, guild) {
-    if (util.isAdmin(author)) {
-        let name = interaction.data.options[0].name
+    let name = interaction.data.options[0].name
+    if (name === 'list') {
+        return rl.roleList(interaction, rolesFile, guild);
+
+    } else if (util.isAdmin(author)) {
         switch (name) {
             case 'add':
-                return ra.roleAdd(interaction, rolesFile);
+                return ra.roleAdd(interaction, rolesFile, guild);
 
             case 'edit':
-                return re.roleEdit(interaction, rolesFile);
-
-            case 'list':
-                return rl.roleList(interaction, rolesFile, guild);
+                return re.roleEdit(interaction, rolesFile, guild);
 
             case 'remove':
-                return rr.roleRemove(interaction, rolesFile);
+                return rr.roleRemove(interaction, rolesFile, guild);
         }
     } else {
-        return 'You do not have admin permissions!';
+        return util.notAdmin();
     }
 }
 
