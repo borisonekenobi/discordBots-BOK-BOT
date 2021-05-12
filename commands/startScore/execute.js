@@ -5,7 +5,7 @@ function execute(interaction, author, guild, rolesFile, options) {
         return util.getUserData(options, guild, rolesFile);
 
     } else {
-        return 'You do not have admin permissions!'
+        return util.notAdmin();
     }
 }
 
