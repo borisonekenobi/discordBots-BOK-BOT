@@ -16,21 +16,21 @@ function log(type, guild, arg1, arg2 = undefined) {
 function responseBuilder(type, arg1, arg2) {
     switch (type) {
         case types.JOINED:
-            return '**Member Joined:**\n' +
-                '<@' + arg1.user.id + '> ' + arg1.user.username + '#' + arg1.user.discriminator;
+            return util.createEmbed('#37D893', 'Member Joined:', '', '', '', '', '<@' + arg1.user.id + '> '  + arg1.user.username + '#' + arg1.user.discriminator);
 
         case types.DELETED:
-            return '**Message sent by <@' + arg1.author.id + '> deleted in <#' + arg1.channel.id + '>:**\n' +
-                arg1.content;
+            return util.createEmbed('#AB1327', '', '', '', '', '', 'Message sent by <@' + arg1.author.id + '> deleted in <#' + arg1.channel.id + '>:', '', [
+                {name: 'Original Message:', value: arg1.content}
+            ]);
 
         case types.LEFT:
-            return '**Member Left:**\n' +
-                '<@' + arg1.user.id + '> ' + arg1.user.username + '#' + arg1.user.discriminator;
+            return util.createEmbed('#D9367D', 'Member Left:', '', '', '', '', '<@' + arg1.user.id + '> ' + arg1.user.username + '#' + arg1.user.discriminator);
 
         case types.EDITED:
-            return '**Message edited by <@' + arg1.author.id + '> in <#' + arg1.channel.id + '>:**\n' +
-                '**Before:**\n' + arg1.content +
-                '\n**After:**\n' + arg2.content;
+            return util.createEmbed('#AB9713', '', '', '', '', '', 'Message edited by <@' + arg1.author.id + '> in <#' + arg1.channel.id + '>:', '', [
+                {name: 'Before:', value: arg1.content},
+                {name: 'After:', value: arg2.content}
+            ]);
     }
 }
 
