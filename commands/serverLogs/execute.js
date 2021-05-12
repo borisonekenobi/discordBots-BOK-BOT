@@ -14,7 +14,7 @@ function execute(interaction, author, guild) {
         }
 
     } else {
-        return 'You do not have admin permissions!'
+        return util.notAdmin();
     }
 }
 
