@@ -8,7 +8,7 @@ function setup(interaction, guild) {
     fs.writeFileSync(logsFile, channelID);
 
     let channel = guild.channels.cache.find(channel => channel.id === channelID);
-    return 'The ' + channel.toString() + ' channel will now be used for logs';
+    return util.createEmbed('#00FF00', '', '', '', '', '', 'The ' + channel.toString() + ' channel will now be used for logs');
 }
 
 module.exports = {setup}
