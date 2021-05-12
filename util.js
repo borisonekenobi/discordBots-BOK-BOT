@@ -145,12 +145,6 @@ function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', Autho
         .setTimestamp()
         .setFooter(Footer, FooterURL);
 
-    /*for (let i = 0; i <= Fields.length - 1; i += 2) {
-        const name = Fields[i];
-        const value = Fields[i + 1];
-        embed.addField(name, value, true);
-    }*/
-
     return embed;
 }
 
