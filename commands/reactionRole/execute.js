@@ -18,7 +18,7 @@ function execute(interaction, author, rolesFile) {
                 return rrr.remove(interaction, rolesFile);
         }
     } else {
-        return 'You do not have admin permissions!';
+        return util.notAdmin();
     }
 }
 
