@@ -132,6 +132,10 @@ function createLog(err) {
     }
 }
 
+function notAdmin() {
+    return createEmbed('#FF0000', '', '', 'Error!', 'https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-512.png', '', 'You do not have admin permissions!');
+}
+
 function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', AuthorImage = '', AuthorURL = '', Description = 'Description', Thumbnail = '', Fields = [], Image = '', Footer = '', FooterURL = '') {
     try {
         return new Discord.MessageEmbed()
@@ -150,4 +154,4 @@ function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', Autho
     }
 }
 
-module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, giveRole, ready, createLog, createEmbed}
+module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, giveRole, ready, createLog, notAdmin, createEmbed}
