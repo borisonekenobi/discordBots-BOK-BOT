@@ -1,6 +1,6 @@
 {
   "name": "discord-bot",
-  "version": "6.0.2",
+  "version": "6.1.0",
   "description": "Discord bot for SitePoint",
   "main": "index.js",
   "scripts": {
