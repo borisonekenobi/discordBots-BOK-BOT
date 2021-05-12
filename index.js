@@ -20,7 +20,7 @@ const log = require('./commands/serverLogs/log.js');
 bot.login(TOKEN).then(r => console.log('Used token: ' + r));
 
 bot.on('ready', () => {
-    util.ready(bot)
+    util.ready(bot);
 });
 
 const consoleListener = process.openStdin();
