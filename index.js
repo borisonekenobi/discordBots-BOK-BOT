@@ -67,14 +67,43 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 content = test.execute();
         }
 
-        bot.api.interactions(interaction.id, interaction.token).callback.post({
+        const createAPIMessage = async(interaction, content) => {
+            const { data, files } = await Discord.APIMessage.create(
+                bot.channels.resolve(interaction.channel_id),
+                content
+            )
+                .resolveData()
+                .resolveFiles()
+            return { ...data, files }
+        }
+
+        const reply = async (interaction, response) => {
+            let data = {
+                content: response
+            }
+
+            if (typeof response === 'object') {
+                data = await createAPIMessage(interaction, response)
+            }
+
+            bot.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                    type: 4,
+                    data,
+                }
+            })
+        };
+
+        reply(interaction, content)
+
+        /*bot.api.interactions(interaction.id, interaction.token).callback.post({
             data: {
                 type: 4,
                 data: {
                     content: content
                 }
             }
-        })
+        })*/
     } catch (err) {
         util.createLog(err);
     }
