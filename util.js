@@ -133,19 +133,21 @@ function createLog(err) {
 }
 
 function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', AuthorImage = '', AuthorURL = '', Description = 'Description', Thumbnail = '', Fields = [], Image = '', Footer = '', FooterURL = '') {
-    const embed = new Discord.MessageEmbed()
-        .setColor(Color)
-        .setTitle(Title)
-        .setURL(URL)
-        .setAuthor(Author, AuthorImage, AuthorURL)
-        .setDescription(Description)
-        .setThumbnail(Thumbnail)
-        .addFields(Fields)
-        .setImage(Image)
-        .setTimestamp()
-        .setFooter(Footer, FooterURL);
-
-    return embed;
+    try {
+        return new Discord.MessageEmbed()
+            .setColor(Color)
+            .setTitle(Title)
+            .setURL(URL)
+            .setAuthor(Author, AuthorImage, AuthorURL)
+            .setDescription(Description)
+            .setThumbnail(Thumbnail)
+            .addFields(Fields)
+            .setImage(Image)
+            .setTimestamp()
+            .setFooter(Footer, FooterURL);
+    } catch (err) {
+        createLog(err);
+    }
 }
 
 module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, giveRole, ready, createLog, createEmbed}
