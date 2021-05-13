@@ -6,6 +6,12 @@ Made by Borisonekenbi.
 
 ## Commands
 
+`logs setup` Setup logs
+
+`logs disable` Disable logs
+
+`reactionrole` idk
+
 `role add` Adds a new role to the list
 
 `role edit` Changes an already setup role
