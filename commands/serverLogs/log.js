@@ -9,7 +9,10 @@ function log(type, guild, arg1, arg2 = undefined) {
     const channelID = fs.readFileSync(file, 'utf8');
 
     if (channelID !== '') {
-        guild.channels.cache.get(channelID).send(responseBuilder(type, arg1, arg2));
+        if (type === types.EDITED && arg1.content === arg2.content) {
+        } else {
+            guild.channels.cache.get(channelID).send(responseBuilder(type, arg1, arg2));
+        }
     }
 }
 
