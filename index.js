@@ -10,7 +10,7 @@ const updateUserRole = require('./commands/updateUserRole/execute.js');
 const consoleInput = require('./commands/console/input.js');
 
 const logs = require('./commands/serverLogs/execute.js');
-const reactionRole = require('./commands/reactionRole/execute.js');
+const reactionRole = require('./commands/buttonRole/execute.js');
 const role = require('./commands/role/execute.js');
 const startScore = require('./commands/startScore/execute.js');
 const test = require('./commands/test/execute.js');
