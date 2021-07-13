@@ -10,7 +10,7 @@ const updateUserRole = require('./commands/updateUserRole/execute.js');
 const consoleInput = require('./commands/console/input.js');
 
 const logs = require('./commands/serverLogs/execute.js');
-const reactionRole = require('./commands/buttonRole/execute.js');
+const buttonRole = require('./commands/buttonRole/execute.js');
 const role = require('./commands/role/execute.js');
 const startScore = require('./commands/startScore/execute.js');
 const test = require('./commands/test/execute.js');
@@ -48,8 +48,17 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 content = logs.execute(interaction, author, guild);
                 break;
 
-            case 'reactionrole':
-                content = reactionRole.execute(interaction, author, rolesFile);
+            case 'buttonrole':
+                let message = buttonRole.execute(interaction, author, rolesFile, guild);
+                let content1 = message.content;
+                let components = message.components;
+                bot.api.interactions(interaction.id, interaction.token).callback.post({data: {
+                        type: 4,
+                        data: {
+                            content: content1,
+                            components: components
+                        }
+                    }})
                 break;
 
             case 'role':
@@ -89,7 +98,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
             bot.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
                     type: 4,
-                    data,
+                    data
                 }
             })
         };

@@ -19,5 +19,8 @@
     "request-promise": "^4.2.6",
     "requests": "^0.3.0",
     "requests.js": "^1.0.0"
+  },
+  "devDependencies": {
+    "discord-slash-commands-client": "^1.2.1"
   }
 }

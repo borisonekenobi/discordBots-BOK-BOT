@@ -66,3 +66,4 @@ typings/
 /commands/
 /createCommand.js
 /command.json
+/deleteCommand.js

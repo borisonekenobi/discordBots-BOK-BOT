@@ -4,12 +4,12 @@ const rre = require('./edit.js');
 const rrr = require('./remove.js');
 
 
-function execute(interaction, author, rolesFile) {
+function execute(interaction, author, rolesFile, guild) {
     if (util.isAdmin(author)) {
         let name = interaction.data.options[0].name
         switch (name) {
             case 'create':
-                return rrc.create(interaction, rolesFile);
+                return rrc.create(interaction, rolesFile, guild);
 
             case 'edit':
                 return rre.edit(interaction, rolesFile);
