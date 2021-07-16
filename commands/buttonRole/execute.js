@@ -22,4 +22,10 @@ function execute(interaction, author, rolesFile, guild) {
     }
 }
 
-module.exports = {execute}
+function buttonClicked(interaction, author, guild) {
+    let roleID = interaction.data.custom_id;
+    let role = guild.roles.cache.find(role => role.id === roleID);
+    util.giveRole(author, role, roleID);
+}
+
+module.exports = {execute, buttonClicked}

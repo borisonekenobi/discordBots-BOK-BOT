@@ -34,7 +34,7 @@ consoleListener.addListener('data', res => {
 
 bot.ws.on('INTERACTION_CREATE', async interaction => {
     try {
-        //console.log(interaction);
+        let type = interaction.type;
         let guildID = interaction.guild_id;
         let guild = bot.guilds.cache.get(guildID);
         let authorID = interaction.member.user.id;
@@ -42,38 +42,60 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let rolesFile = 'servers/' + guildID + '.roles';
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
+        //console.log(interaction);
 
-        switch (name){
-            case 'logs':
-                content = logs.execute(interaction, author, guild);
+        switch (type) {
+            case 1:
                 break;
 
-            case 'buttonrole':
-                let message = buttonRole.execute(interaction, author, rolesFile, guild);
-                let content1 = message.content;
-                let components = message.components;
-                bot.api.interactions(interaction.id, interaction.token).callback.post({data: {
-                        type: 4,
-                        data: {
-                            content: content1,
-                            components: components
-                        }
-                    }})
+            case 2:
+                switch (name) {
+                    case 'logs':
+                        content = logs.execute(interaction, author, guild);
+                        break;
+
+                    case 'buttonrole':
+                        let message = buttonRole.execute(interaction, author, rolesFile, guild);
+                        //let channel = message.channel;
+                        let content1 = message.content;
+                        let components = message.components;
+                        bot.api.interactions(interaction.id, interaction.token).callback.post({
+                            data: {
+                                type: 4,
+                                data: {
+                                    content: content1,
+                                    components: components
+                                }
+                            }
+                        });
+                        return;
+
+                    case 'role':
+                        content = role.execute(interaction, author, rolesFile, guild);
+                        break;
+
+                    case 'startscore':
+                        content = startScore.execute(interaction, author, guild, rolesFile, {
+                            url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
+                            json: true
+                        });
+                        break;
+
+                    case 'test':
+                        content = test.execute();
+                }
                 break;
 
-            case 'role':
-                content = role.execute(interaction, author, rolesFile, guild);
-                break;
+            case 3:
+                buttonRole.buttonClicked(interaction, author, guild);
+                content = undefined;
+                bot.api.interactions(interaction.id, interaction.token).callback.post({
+                    data: {
+                        type: 6
+                    }
 
-            case 'startscore':
-                content = startScore.execute(interaction, author, guild, rolesFile, {
-                    url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
-                    json: true
-                });
-                break;
-
-            case 'test':
-                content = test.execute();
+                }).catch(reason => {console.log(reason)})
+                return;
         }
 
         const createAPIMessage = async(interaction, content) => {
