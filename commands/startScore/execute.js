@@ -1,12 +1,7 @@
 const util = require('../../util.js');
 
-function execute(interaction, author, guild, rolesFile, options) {
-    if (util.isAdmin(author)) {
-        return util.getUserData(options, guild, rolesFile);
-
-    } else {
-        return util.notAdmin();
-    }
+function execute(interaction, guild, rolesFile, options) {
+    return util.getUserData(options, guild, rolesFile);
 }
 
 module.exports = {execute}

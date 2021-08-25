@@ -1,10 +1,12 @@
 {
   "name": "discord-bot",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Discord bot for SitePoint",
   "main": "index.js",
   "scripts": {
-    "test": "echo \\\"Error: no commands/test specified\\\" && exit 1"
+    "test": "echo \\\"Error: no commands/test specified\\\" && exit 1",
+    "devstart": "nodemon ./bin/www",
+    "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart"
   },
   "author": "Boris Vasilev",
   "license": "ISC",
@@ -21,6 +23,7 @@
     "requests.js": "^1.0.0"
   },
   "devDependencies": {
-    "discord-slash-commands-client": "^1.2.1"
+    "discord-slash-commands-client": "^1.2.1",
+    "nodemon": "^2.0.12"
   }
 }

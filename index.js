@@ -49,40 +49,44 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 break;
 
             case 2:
-                switch (name) {
-                    case 'logs':
-                        content = logs.execute(interaction, author, guild);
-                        break;
+                if (util.isAdmin(author)) {
+                    switch (name) {
+                        case 'logs':
+                            content = logs.execute(interaction, guild);
+                            break;
 
-                    case 'buttonrole':
-                        let message = buttonRole.execute(interaction, author, rolesFile, guild);
-                        //let channel = message.channel;
-                        let content1 = message.content;
-                        let components = message.components;
-                        bot.api.interactions(interaction.id, interaction.token).callback.post({
-                            data: {
-                                type: 4,
+                        case 'buttonrole':
+                            let message = buttonRole.execute(interaction, rolesFile, guild);
+                            //let channel = message.channel;
+                            let content1 = message.content;
+                            let components = message.components;
+                            bot.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
-                                    content: content1,
-                                    components: components
+                                    type: 4,
+                                    data: {
+                                        content: content1,
+                                        components: components
+                                    }
                                 }
-                            }
-                        });
-                        return;
+                            });
+                            return;
 
-                    case 'role':
-                        content = role.execute(interaction, author, rolesFile, guild);
-                        break;
+                        case 'role':
+                            content = role.execute(interaction, rolesFile, guild);
+                            break;
 
-                    case 'startscore':
-                        content = startScore.execute(interaction, author, guild, rolesFile, {
-                            url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
-                            json: true
-                        });
-                        break;
+                        case 'startscore':
+                            content = startScore.execute(interaction, guild, rolesFile, {
+                                url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
+                                json: true
+                            });
+                            break;
 
-                    case 'test':
-                        content = test.execute();
+                        case 'test':
+                            content = test.execute();
+                    }
+                } else {
+                    return util.notAdmin();
                 }
                 break;
 
@@ -93,7 +97,6 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                     data: {
                         type: 6
                     }
-
                 }).catch(reason => {console.log(reason)})
                 return;
         }
