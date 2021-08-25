@@ -84,10 +84,14 @@ function getFileData(path) {
     return allArgs;
 }
 
+function hasRole(member, roleID) {
+    return member.roles.cache.some(role => role.id === roleID);
+}
+
 function giveRole(member, role, roleID, msg = undefined) {
     if (member !== undefined) {
         if (role !== undefined) {
-            if (!member.roles.cache.some(role => role.id === roleID)) {
+            if (!hasRole(member, roleID)) {
                 member.roles.add(role)
                     .then(() => {
                         if (msg !== undefined) {
@@ -104,6 +108,10 @@ function giveRole(member, role, roleID, msg = undefined) {
     } else {
         console.error('member is undefined');
     }
+}
+
+function removeRole(member, role) {
+    member.roles.remove(role);
 }
 
 function ready(bot) {
@@ -153,4 +161,4 @@ function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', Autho
     }
 }
 
-module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, giveRole, ready, createLog, notAdmin, createEmbed}
+module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, hasRole, giveRole, removeRole ,ready, createLog, notAdmin, createEmbed}
