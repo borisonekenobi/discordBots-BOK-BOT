@@ -10,6 +10,7 @@ function execute(msg, msgContent, member, rolesFile, options) {
             for (let user of data.players) {
                 userData.push([user.id, user.level]);
             }
+
             const contents = fs.readFileSync(rolesFile, 'utf8');
             const lines = contents.split('\n');
             const args = [];

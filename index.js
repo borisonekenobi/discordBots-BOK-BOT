@@ -127,17 +127,8 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 }
             })
         };
+        await reply(interaction, content)
 
-        reply(interaction, content)
-
-        /*bot.api.interactions(interaction.id, interaction.token).callback.post({
-            data: {
-                type: 4,
-                data: {
-                    content: content
-                }
-            }
-        })*/
     } catch (err) {
         util.createLog(err);
     }
