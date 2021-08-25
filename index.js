@@ -46,6 +46,8 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
 
         switch (type) {
             case 1:
+                console.log('type == 1');
+                console.log(interaction);
                 break;
 
             case 2:
