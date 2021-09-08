@@ -6,11 +6,12 @@ Made by Borisonekenbi.
 
 ## Commands
 
+
+`buttonrole create` Create a message
+
 `logs setup` Setup logs
 
 `logs disable` Disable logs
-
-`reactionrole` idk
 
 `role add` Adds a new role to the list
 
