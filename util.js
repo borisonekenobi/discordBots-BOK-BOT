@@ -50,13 +50,17 @@ function isAdmin(user) {
     return user.hasPermission('ADMINISTRATOR') || user.id === '360377836479053826';
 }
 
-function createFile(path) {
-    if (fs.existsSync(path)) {
-
-    } else {
-        fs.appendFileSync(path, '');
+function createDir(dir) {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
     }
-    return path;
+}
+
+function createFile(file) {
+    if (!fs.existsSync(file)) {
+        fs.appendFileSync(file, '');
+    }
+    return file;
 }
 
 function checkID(IDnum, path) {
@@ -161,4 +165,4 @@ function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', Autho
     }
 }
 
-module.exports = {getUserData, isAdmin, createFile, checkID, getFileData, hasRole, giveRole, removeRole ,ready, createLog, notAdmin, createEmbed}
+module.exports = {getUserData, isAdmin, createDir, createFile, checkID, getFileData, hasRole, giveRole, removeRole ,ready, createLog, notAdmin, createEmbed}

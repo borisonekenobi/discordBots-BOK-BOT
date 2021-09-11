@@ -39,7 +39,8 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let guild = bot.guilds.cache.get(guildID);
         let authorID = interaction.member.user.id;
         let author = guild.members.cache.get(authorID);
-        let rolesFile = 'servers/' + guildID + '/roles.txt';
+        util.createDir('./servers/' + guildID);
+        let rolesFile = './servers/' + guildID + '/roles.txt';
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
         //console.log(interaction);
@@ -139,8 +140,9 @@ bot.on('guildMemberAdd', member => {
     try {
         const guild = member.guild;
         const guildID = guild.id;
-        const rolesFile = 'servers/' + guildID + '/roles.txt';
-        const botRolesFile = 'servers/' + guildID + '/botroles.txt';
+        util.createDir('./servers/' + guildID);
+        const rolesFile = './servers/' + guildID + '/roles.txt';
+        const botRolesFile = './servers/' + guildID + '/botroles.txt';
         util.createFile(rolesFile);
         util.createFile(botRolesFile);
 
@@ -168,7 +170,8 @@ bot.on('message', msg => {
     try {
         const msgContent = msg.content;
         const guildID = msg.guild.id;
-        const rolesFile = 'servers/' + guildID + '/roles.txt';
+        util.createDir('./servers/' + guildID);
+        const rolesFile = './servers/' + guildID + '/roles.txt';
         const member = msg.mentions.members.first();
         const options = {
             url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
