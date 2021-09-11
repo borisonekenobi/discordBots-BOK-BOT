@@ -42,7 +42,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let rolesFile = 'servers/' + guildID + '/roles.txt';
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
-        console.log(interaction);
+        //console.log(interaction);
 
         switch (type) {
             case 1:
