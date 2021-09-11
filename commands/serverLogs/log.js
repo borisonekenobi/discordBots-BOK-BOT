@@ -4,7 +4,7 @@ const util = require('../../util.js');
 const fs = require('fs');
 
 function log(type, guild, arg1, arg2 = undefined) {
-    const file = './servers/' + guild.id + '.logsfile';
+    const file = './servers/' + guild.id + '/logsfile.txt';
     util.createFile(file);
     const channelID = fs.readFileSync(file, 'utf8');
 

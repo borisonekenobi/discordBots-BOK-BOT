@@ -1,6 +1,5 @@
-function create(interaction, rolesFile, guild) {
+function create(interaction, guild) {
     let params = interaction.data.options[0].options;
-    //let channel = params[0].value;
     let message = params[0].value;
     let components = []
 
@@ -15,7 +14,6 @@ function create(interaction, rolesFile, guild) {
     }
 
     return {
-        //"channel": channel,
         "content": message,
         "components": [
             {

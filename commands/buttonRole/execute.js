@@ -1,21 +1,9 @@
 const util = require('../../util.js');
 const rrc = require('./create.js');
-const rre = require('./edit.js');
-const rrr = require('./remove.js');
 
 
-function execute(interaction, rolesFile, guild) {
-    let name = interaction.data.options[0].name
-    switch (name) {
-        case 'create':
-            return rrc.create(interaction, rolesFile, guild);
-
-        case 'edit':
-            return rre.edit(interaction, rolesFile);
-
-        case 'remove':
-            return rrr.remove(interaction, rolesFile);
-    }
+function execute(interaction, guild) {
+    return rrc.create(interaction, guild);
 }
 
 function buttonClicked(interaction, author, guild) {

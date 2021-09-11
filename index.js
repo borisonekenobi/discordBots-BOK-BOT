@@ -39,10 +39,10 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let guild = bot.guilds.cache.get(guildID);
         let authorID = interaction.member.user.id;
         let author = guild.members.cache.get(authorID);
-        let rolesFile = 'servers/' + guildID + '.roles';
+        let rolesFile = 'servers/' + guildID + '/roles.txt';
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
-        //console.log(interaction);
+        console.log(interaction);
 
         switch (type) {
             case 1:
@@ -58,15 +58,14 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                             break;
 
                         case 'buttonrole':
-                            let message = buttonRole.execute(interaction, rolesFile, guild);
-                            //let channel = message.channel;
-                            let content1 = message.content;
+                            let message = buttonRole.execute(interaction, guild);
+                            let msg = message.content;
                             let components = message.components;
                             bot.api.interactions(interaction.id, interaction.token).callback.post({
                                 data: {
                                     type: 4,
                                     data: {
-                                        content: content1,
+                                        content: msg,
                                         components: components
                                     }
                                 }
@@ -140,8 +139,8 @@ bot.on('guildMemberAdd', member => {
     try {
         const guild = member.guild;
         const guildID = guild.id;
-        const rolesFile = 'servers/' + guildID + '.roles';
-        const botRolesFile = 'servers/' + guildID + '.botroles';
+        const rolesFile = 'servers/' + guildID + '/roles.txt';
+        const botRolesFile = 'servers/' + guildID + '/botroles.txt';
         util.createFile(rolesFile);
         util.createFile(botRolesFile);
 
@@ -168,11 +167,11 @@ bot.on('guildMemberAdd', member => {
 bot.on('message', msg => {
     try {
         const msgContent = msg.content;
-        const serverID = msg.guild.id;
-        const rolesFile = 'servers/' + serverID + '.roles';
+        const guildID = msg.guild.id;
+        const rolesFile = 'servers/' + guildID + '/roles.txt';
         const member = msg.mentions.members.first();
         const options = {
-            url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + serverID,
+            url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
             json: true
         }
         if (msg.author.id === '159985870458322944' && member !== undefined) {

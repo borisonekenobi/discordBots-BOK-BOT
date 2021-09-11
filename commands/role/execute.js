@@ -5,15 +5,15 @@ const rr = require('./remove.js');
 
 function execute(interaction, rolesFile, guild) {
     let name = interaction.data.options[0].name
-    if (name === 'list') {
-        return rl.roleList(interaction, rolesFile, guild);
-    }
     switch (name) {
         case 'add':
             return ra.roleAdd(interaction, rolesFile, guild);
 
         case 'edit':
             return re.roleEdit(interaction, rolesFile, guild);
+
+        case 'list':
+            return rl.roleList(interaction, rolesFile, guild);
 
         case 'remove':
             return rr.roleRemove(interaction, rolesFile, guild);
