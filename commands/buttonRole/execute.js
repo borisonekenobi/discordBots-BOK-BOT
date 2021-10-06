@@ -1,9 +1,17 @@
 const util = require('../../util.js');
-const rrc = require('./create.js');
+const brc = require('./create.js');
+const bre = require('./edit.js');
 
 
 function execute(interaction, guild) {
-    return rrc.create(interaction, guild);
+    let name = interaction.data.options[0].name
+    switch (name) {
+        case 'create':
+            return brc.create(interaction, guild);
+
+        case 'edit':
+            return bre.edit(interaction, guild);
+    }
 }
 
 function buttonClicked(interaction, author, guild) {
