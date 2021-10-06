@@ -1,6 +1,6 @@
 {
   "name": "discord-bot",
-  "version": "8.0.3",
+  "version": "8.1.0",
   "description": "BOK BOT",
   "main": "index.js",
   "scripts": {
