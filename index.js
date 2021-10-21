@@ -43,6 +43,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let rolesFile = './servers/' + guildID + '/roles.txt';
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
+        console.log('Interaction type ' + type + ' used by ' + authorID + ' in guild ' + guildID + ' in channel ' + interaction.channel_id);
         //console.log(interaction);
 
         switch (type) {
@@ -145,6 +146,7 @@ bot.on('guildMemberAdd', member => {
         const botRolesFile = './servers/' + guildID + '/botroles.txt';
         util.createFile(rolesFile);
         util.createFile(botRolesFile);
+        console.log(member.id + ' joined ' + guildID);
 
         log.log(types.JOINED, guild, member);
 
@@ -196,6 +198,7 @@ const types = require('./types.js')
 
 bot.on('messageUpdate', (oldMessage, newMessage) => {
     try {
+        console.log(oldMessage.author.id + ' edited message in guild ' + oldMessage.channel.guild.id + ' in channel ' + oldMessage.channel.id);
         log.log(types.EDITED, oldMessage.channel.guild, oldMessage, newMessage);
     } catch (err) {
         util.createLog(err);
@@ -205,6 +208,7 @@ bot.on('messageUpdate', (oldMessage, newMessage) => {
 
 bot.on("messageDelete", (deleteMessage) => {
     try {
+        console.log(deleteMessage.author.id + ' deleted message in guild ' + deleteMessage.channel.guild.id + ' in channel ' + deleteMessage.channel.id);
         log.log(types.DELETED, deleteMessage.channel.guild, deleteMessage);
     } catch (err) {
         util.createLog(err);
@@ -214,6 +218,7 @@ bot.on("messageDelete", (deleteMessage) => {
 
 bot.on('guildMemberRemove', member => {
     try {
+        console.log(member.id + ' left ' + member.guild.id);
         log.log(types.LEFT, member.guild, member);
     } catch (err) {
         util.createLog(err);
