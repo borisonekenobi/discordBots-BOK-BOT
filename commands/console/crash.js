@@ -4,7 +4,7 @@ function crash(E = 'Unknown error') {
 
 function help() {
     console.log('crash [E]');
-    console.log('    Will throw an error E. If E is not given, \'No error provided\' will be thrown');
+    console.log('    Will throw an error E. If E is not given, \'Unknown error\' will be thrown');
 }
 
 module.exports = {crash, help}
