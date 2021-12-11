@@ -1,4 +1,4 @@
-const util = require('../../util.js');
+const util = require('../../util');
 
 function list(interaction, rolesFile, guild) {
     util.createFile(rolesFile);

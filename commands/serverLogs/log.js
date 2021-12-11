@@ -1,5 +1,5 @@
 const types = require('../../types.js')
-const util = require('../../util.js');
+const util = require('../../util');
 
 const fs = require('fs');
 

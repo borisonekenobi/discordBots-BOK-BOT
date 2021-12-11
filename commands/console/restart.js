@@ -1,4 +1,4 @@
-const util = require('../../util.js');
+const util = require('../../util');
 
 const Discord = require('discord.js');
 const TOKEN = process.env.TOKEN;
