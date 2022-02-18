@@ -4,7 +4,7 @@ const fs = require("fs");
 
 function setup(interaction, guild) {
     let channelID = Object.keys(interaction.data.resolved.channels)[0]
-    let logsFile = util.createFile('./servers/' + guild.id + '.logsfile');
+    let logsFile = util.createFile('./servers/' + guild.id + '/logsfile.txt');
     fs.writeFileSync(logsFile, channelID);
 
     let channel = guild.channels.cache.find(channel => channel.id === channelID);
