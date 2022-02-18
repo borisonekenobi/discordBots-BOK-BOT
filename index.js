@@ -1,6 +1,8 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-let bot = new Discord.Client();
+let bot = new Discord.Client({
+    intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES]
+});
 const TOKEN = process.env.TOKEN;
 
 const util = require('./util.js');
@@ -34,17 +36,18 @@ consoleListener.addListener('data', res => {
 
 bot.ws.on('INTERACTION_CREATE', async interaction => {
     try {
+        //console.log(interaction)
         let type = interaction.type;
         let guildID = interaction.guild_id;
         let guild = bot.guilds.cache.get(guildID);
         let authorID = interaction.member.user.id;
-        let author = guild.members.cache.get(authorID);
+        let author = interaction.member;
         util.createDir('./servers/' + guildID);
         let rolesFile = './servers/' + guildID + '/roles.txt';
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
         console.log('Interaction type ' + type + ' used by ' + authorID + ' in guild ' + guildID + ' in channel ' + interaction.channel_id);
-        //console.log(interaction);
+        console.log(interaction);
 
         switch (type) {
             case 1:
@@ -53,7 +56,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 break;
 
             case 2:
-                if (util.isAdmin(author)) {
+                //if (util.isAdmin(author)) {
                     switch (name) {
                         case 'logs':
                             content = logs.execute(interaction, guild);
@@ -88,9 +91,9 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                         case 'test':
                             content = test.execute();
                     }
-                } else {
+                /*} else {
                     return util.notAdmin();
-                }
+                }*/
                 break;
 
             case 3:

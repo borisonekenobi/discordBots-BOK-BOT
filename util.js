@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { Permissions } = require('discord.js');
 const fs = require('fs');
 const rp = require('request-promise');
 
@@ -47,7 +48,7 @@ function getUserData(options, guild, rolesFile) {
 }
 
 function isAdmin(user) {
-    return user.hasPermission('ADMINISTRATOR') || user.id === '360377836479053826';
+    return user.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || user.id === '360377836479053826';
 }
 
 function createDir(dir) {
@@ -89,7 +90,7 @@ function getFileData(path) {
 }
 
 function hasRole(member, roleID) {
-    return member.roles.cache.some(role => role.id === roleID);
+    return member.roles.some(role => role.id === roleID);
 }
 
 function giveRole(member, role, roleID, msg = undefined) {
@@ -119,8 +120,7 @@ function removeRole(member, role) {
 }
 
 function ready(bot) {
-    bot.user.setActivity('Star Wars', {type: 'WATCHING'})
-        .then(r => console.log(r));
+    bot.user.setPresence({ activities: [{ name: 'Star Wars', type: 'WATCHING' }], status: 'online' });
     console.info(`Logged in as ${bot.user.tag}`);
     bot.channels.cache.get('738439111412809730').send(':green_circle: Bot has started.');
 }
