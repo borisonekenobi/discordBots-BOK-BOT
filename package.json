@@ -3,10 +3,9 @@
   "version": "8.2.0",
   "description": "BOK BOT",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \\\"Error: no commands/test specified\\\" && exit 1",
-    "devstart": "nodemon ./bin/www",
-    "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart"
+    "start": "node ."
   },
   "author": "Boris Vasilev",
   "license": "ISC",

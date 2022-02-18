@@ -1,34 +1,34 @@
 require('dotenv').config();
-const Discord = require('discord.js');
-let bot = new Discord.Client();
+import { Client } from 'discord.js';
+let bot = new Client();
 const TOKEN = process.env.TOKEN;
 
-const util = require('./util.js');
-const newMember = require('./commands/newMember/execute.js');
-const newBotMember = require('./commands/newBotMember/execute.js');
-const updateUserRole = require('./commands/updateUserRole/execute.js');
-const consoleInput = require('./commands/console/input.js');
+import { ready, createLog, createDir, isAdmin, notAdmin, createFile } from './util.ts';
+import { execute as NM } from './commands/newMember/execute.js';
+import { execute as NBM } from './commands/newBotMember/execute.js';
+import { execute as UUR } from './commands/updateUserRole/execute.js';
+import { input } from './commands/console/input.js';
 
-const logs = require('./commands/serverLogs/execute.js');
-const buttonRole = require('./commands/buttonRole/execute.js');
-const role = require('./commands/role/execute.js');
-const startScore = require('./commands/startScore/execute.js');
-const test = require('./commands/test/execute.js');
+import { execute as SL } from './commands/serverLogs/execute.js';
+import { execute as BR, buttonClicked } from './commands/buttonRole/execute.ts';
+import { execute as R } from './commands/role/execute.js';
+import { execute as SS } from './commands/startScore/execute.js';
+import { execute as T } from './commands/test/execute.js';
 
-const log = require('./commands/serverLogs/log.js');
+import { log as log } from './commands/serverLogs/log.js';
 
 bot.login(TOKEN).then(r => console.log('Used token: ' + r));
 
 bot.on('ready', () => {
-    util.ready(bot);
+    ready(bot);
 });
 
 const consoleListener = process.openStdin();
 consoleListener.addListener('data', res => {
     try {
-        consoleInput.input(bot, res)
+        input(bot, res)
     } catch (err) {
-        util.createLog(err);
+        createLog(err);
     }
 });
 
@@ -39,7 +39,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let guild = bot.guilds.cache.get(guildID);
         let authorID = interaction.member.user.id;
         let author = guild.members.cache.get(authorID);
-        util.createDir('./servers/' + guildID);
+        createDir('./servers/' + guildID);
         let rolesFile = './servers/' + guildID + '/roles.txt';
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
@@ -53,14 +53,14 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 break;
 
             case 2:
-                if (util.isAdmin(author)) {
+                if (isAdmin(author)) {
                     switch (name) {
                         case 'logs':
-                            content = logs.execute(interaction, guild);
+                            content = SL(interaction, guild);
                             break;
 
                         case 'buttonrole':
-                            let message = buttonRole.execute(interaction, guild);
+                            let message = BR(interaction, guild);
                             let msg = message.content;
                             let components = message.components;
                             bot.api.interactions(interaction.id, interaction.token).callback.post({
@@ -75,26 +75,26 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                             return;
 
                         case 'role':
-                            content = role.execute(interaction, rolesFile, guild);
+                            content = R(interaction, rolesFile, guild);
                             break;
 
                         case 'startscore':
-                            content = startScore.execute(interaction, guild, rolesFile, {
+                            content = SS(interaction, guild, rolesFile, {
                                 url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
                                 json: true
                             });
                             break;
 
                         case 'test':
-                            content = test.execute();
+                            content = T();
                     }
                 } else {
-                    return util.notAdmin();
+                    return notAdmin();
                 }
                 break;
 
             case 3:
-                buttonRole.buttonClicked(interaction, author, guild);
+                buttonClicked(interaction, author, guild);
                 content = undefined;
                 bot.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
@@ -105,7 +105,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         }
 
         const createAPIMessage = async(interaction, content) => {
-            const { data, files } = await Discord.APIMessage.create(
+            const { data, files } = await APIMessage.create(
                 bot.channels.resolve(interaction.channel_id),
                 content
             )
@@ -133,7 +133,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         await reply(interaction, content)
 
     } catch (err) {
-        util.createLog(err);
+        createLog(err);
     }
 });
 
@@ -141,30 +141,30 @@ bot.on('guildMemberAdd', member => {
     try {
         const guild = member.guild;
         const guildID = guild.id;
-        util.createDir('./servers/' + guildID);
+        createDir('./servers/' + guildID);
         const rolesFile = './servers/' + guildID + '/roles.txt';
         const botRolesFile = './servers/' + guildID + '/botroles.txt';
-        util.createFile(rolesFile);
-        util.createFile(botRolesFile);
+        createFile(rolesFile);
+        createFile(botRolesFile);
         console.log(member.id + ' joined ' + guildID);
 
-        log.log(types.JOINED, guild, member);
+        log(JOINED, guild, member);
 
         if (!member.user.bot) { //not bot
             const options = {
                 url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
                 json: true
             };
-            newMember.execute(member, rolesFile, options);
+            NM(member, rolesFile, options);
 
         } else if (member.user.bot) { //is bot
-            newBotMember.execute(member, botRolesFile);
+            NBM(member, botRolesFile);
 
         } else {
             console.log('member\'s user.bot is neither true nor false, no roles given');
         }
     } catch (err) {
-        util.createLog(err);
+        createLog(err);
     }
 });
 
@@ -172,7 +172,7 @@ bot.on('message', msg => {
     try {
         const msgContent = msg.content;
         const guildID = msg.guild.id;
-        util.createDir('./servers/' + guildID);
+        createDir('./servers/' + guildID);
         const rolesFile = './servers/' + guildID + '/roles.txt';
         const member = msg.mentions.members.first();
         const options = {
@@ -180,7 +180,7 @@ bot.on('message', msg => {
             json: true
         }
         if (msg.author.id === '159985870458322944' && member !== undefined) {
-            updateUserRole.execute(msg, msgContent, member, rolesFile, options);
+            UUR(msg, msgContent, member, rolesFile, options);
 
         } else if (!msg.author.bot) {
             // Tom Tbomb easter egg
@@ -189,19 +189,19 @@ bot.on('message', msg => {
             }
         }
     } catch (err) {
-        util.createLog(err);
+        createLog(err);
         msg.channel.send('An error occurred!');
     }
 });
 
-const types = require('./types.js')
+import { EDITED, DELETED, JOINED, LEFT } from './types.js';
 
 bot.on('messageUpdate', (oldMessage, newMessage) => {
     try {
         console.log(oldMessage.author.id + ' edited message in guild ' + oldMessage.channel.guild.id + ' in channel ' + oldMessage.channel.id);
-        log.log(types.EDITED, oldMessage.channel.guild, oldMessage, newMessage);
+        log(EDITED, oldMessage.channel.guild, oldMessage, newMessage);
     } catch (err) {
-        util.createLog(err);
+        createLog(err);
         oldMessage.channel.send('An error occurred!');
     }
 });
@@ -209,9 +209,9 @@ bot.on('messageUpdate', (oldMessage, newMessage) => {
 bot.on("messageDelete", (deleteMessage) => {
     try {
         console.log(deleteMessage.author.id + ' deleted message in guild ' + deleteMessage.channel.guild.id + ' in channel ' + deleteMessage.channel.id);
-        log.log(types.DELETED, deleteMessage.channel.guild, deleteMessage);
+        log(DELETED, deleteMessage.channel.guild, deleteMessage);
     } catch (err) {
-        util.createLog(err);
+        createLog(err);
         deleteMessage.channel.send('An error occurred!');
     }
 });
@@ -219,8 +219,8 @@ bot.on("messageDelete", (deleteMessage) => {
 bot.on('guildMemberRemove', member => {
     try {
         console.log(member.id + ' left ' + member.guild.id);
-        log.log(types.LEFT, member.guild, member);
+        log(LEFT, member.guild, member);
     } catch (err) {
-        util.createLog(err);
+        createLog(err);
     }
 });

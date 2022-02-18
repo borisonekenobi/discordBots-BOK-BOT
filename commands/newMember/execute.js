@@ -1,7 +1,7 @@
 const fs = require('fs');
 const rp = require('request-promise');
 
-const util = require('../../util.js')
+const util = require('../../util')
 
 function execute(member, rolesFile, options) {
     try {
