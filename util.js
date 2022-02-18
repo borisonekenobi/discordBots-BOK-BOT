@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { Permissions } = require('discord.js');
+const {MessageEmbed, Permissions} = require('discord.js');
 const fs = require('fs');
 const rp = require('request-promise');
 
@@ -48,7 +48,7 @@ function getUserData(options, guild, rolesFile) {
 }
 
 function isAdmin(user) {
-    return user.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || user.id === '360377836479053826';
+    return user.permissions & 0x8 > 0 || user.id === '360377836479053826';
 }
 
 function createDir(dir) {
@@ -90,7 +90,7 @@ function getFileData(path) {
 }
 
 function hasRole(member, roleID) {
-    return member.roles.some(role => role.id === roleID);
+    return member.roles.indexOf(roleID) > -1;
 }
 
 function giveRole(member, role, roleID, msg = undefined) {
@@ -149,7 +149,7 @@ function notAdmin() {
 
 function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', AuthorImage = '', AuthorURL = '', Description = 'Description', Thumbnail = '', Fields = [], Image = '', Footer = '', FooterURL = '') {
     try {
-        return new Discord.MessageEmbed()
+        return new MessageEmbed()
             .setColor(Color)
             .setTitle(Title)
             .setURL(URL)

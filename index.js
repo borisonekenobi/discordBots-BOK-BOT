@@ -1,7 +1,8 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-let bot = new Discord.Client({
-    intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES]
+const {Client, Intents, APIMessage} = require('discord.js');
+let bot = new Client({
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS]
 });
 const TOKEN = process.env.TOKEN;
 
@@ -47,7 +48,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
         console.log('Interaction type ' + type + ' used by ' + authorID + ' in guild ' + guildID + ' in channel ' + interaction.channel_id);
-        console.log(interaction);
+        //console.log(interaction);
 
         switch (type) {
             case 1:
@@ -56,7 +57,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 break;
 
             case 2:
-                //if (util.isAdmin(author)) {
+                if (util.isAdmin(author)) {
                     switch (name) {
                         case 'logs':
                             content = logs.execute(interaction, guild);
@@ -91,9 +92,9 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                         case 'test':
                             content = test.execute();
                     }
-                /*} else {
+                } else {
                     return util.notAdmin();
-                }*/
+                }
                 break;
 
             case 3:
@@ -108,7 +109,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         }
 
         const createAPIMessage = async(interaction, content) => {
-            const { data, files } = await Discord.APIMessage.create(
+            const { data, files } = await APIMessage.create(
                 bot.channels.resolve(interaction.channel_id),
                 content
             )
