@@ -94,24 +94,16 @@ function hasRole(member, roleID) {
 }
 
 function giveRole(member, role, roleID, msg = undefined) {
-    if (member !== undefined) {
-        if (role !== undefined) {
-            if (!hasRole(member, roleID)) {
-                member.roles.add(role)
-                    .then(() => {
-                        if (msg !== undefined) {
-                            msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!');
-                        }
-                    })
-                    .then(() => console.log(member.id + ' awarded ' + role.id + ' role'));
-            } else {
-                console.log(member.id + ' already has ' + role.id + ', no role awarded');
-            }
-        } else {
-            console.log('role is undefined')
-        }
+    if (!hasRole(member, roleID)) {
+        member.roles.add(role)
+            .then(() => {
+                if (msg !== undefined) {
+                    msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!');
+                }
+            })
+            .then(() => console.log(member.id + ' awarded ' + role.id + ' role'));
     } else {
-        console.error('member is undefined');
+        console.log(member.id + ' already has ' + role.id + ', no role awarded');
     }
 }
 
