@@ -42,7 +42,8 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let guildID = interaction.guild_id;
         let guild = bot.guilds.cache.get(guildID);
         let authorID = interaction.member.user.id;
-        let author = interaction.member;
+        let author = await guild.members.fetch(authorID);
+        //console.log(author);
         util.createDir('./servers/' + guildID);
         let rolesFile = './servers/' + guildID + '/roles.txt';
         let name = interaction.data.name;
