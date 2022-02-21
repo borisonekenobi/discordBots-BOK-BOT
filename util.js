@@ -93,7 +93,7 @@ function hasRole(member, roleID) {
     return member._roles.indexOf(roleID) >= 0;
 }
 
-function giveRole(member, role, roleID, msg = undefined) {
+function giveRole(member, role, roleID, msg = undefined, guildOwner = undefined) {
     if (!hasRole(member, roleID)) {
         member.roles.add(role)
             .then(() => {
@@ -101,7 +101,10 @@ function giveRole(member, role, roleID, msg = undefined) {
                     msg.channel.send('Congratulations <@' + member.id + '>, you have just received the ' + role.name + ' role!');
                 }
             })
-            .then(() => console.log(member.id + ' awarded ' + role.id + ' role'));
+            .then(() => console.log(member.id + ' awarded ' + role.id + ' role'))
+            .catch(() => {
+                guildOwner.send('Error occured while adding role to ' + member.username + '#' + member.discriminator + '! *It\'s possible that the bot\'s role is not high enough in the hierarchy, move the bot\'s role above all roles that it will be awarding*')
+            });
     } else {
         console.log(member.id + ' already has ' + role.id + ', no role awarded');
     }

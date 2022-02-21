@@ -3,7 +3,7 @@ const rp = require('request-promise');
 
 const util = require('../../util')
 
-function execute(member, rolesFile, options) {
+function execute(member, rolesFile, options, guildOwner) {
     try {
         let userData = [];
         rp(options)
@@ -34,13 +34,16 @@ function execute(member, rolesFile, options) {
                             let roleId = arg[0];
                             let role = member.guild.roles.cache.find(role => role.id === roleId);
                             if (roleLevel === 0) {
-                                util.giveRole(member, role, roleId)
+                                util.giveRole(member, role, roleId, undefined, guildOwner);
                             } else if (Number(userInfo[1]) >= roleLevel) {
-                                util.giveRole(member, role, roleId)
+                                util.giveRole(member, role, roleId, undefined, guildOwner);
                             }
                         }
                     }
                 }
+            })
+            .catch(() => {
+                guildOwner.send('Error occured while retrieving data from mee6.xyz leaderboard. *The leaderboard may be set to private, go to https://mee6.xyz/dashboard/' + guildOwner.guild.id + '/leaderboard to change privacy settings.*')
             });
     } catch (err) {
         util.createLog(err);
