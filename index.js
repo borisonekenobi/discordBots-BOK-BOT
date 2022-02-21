@@ -174,7 +174,7 @@ bot.on('guildMemberAdd', async member => {
     }
 });
 
-bot.on('message', msg => {
+bot.on('messageCreate', msg => {
     try {
         const msgContent = msg.content;
         const guildID = msg.guild.id;
