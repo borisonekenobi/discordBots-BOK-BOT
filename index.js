@@ -145,7 +145,6 @@ bot.on('guildMemberAdd', async member => {
     try {
         const guild = member.guild;
         const guildID = guild.id;
-        const guildOwner = await guild.members.fetch(guild.ownerId);
         util.createDir('./servers/' + guildID);
         const rolesFile = './servers/' + guildID + '/roles.txt';
         const botRolesFile = './servers/' + guildID + '/botroles.txt';
@@ -160,7 +159,7 @@ bot.on('guildMemberAdd', async member => {
                 url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
                 json: true
             };
-            newMember.execute(member, rolesFile, options, guildOwner);
+            newMember.execute(member, rolesFile, options);
 
         } else if (member.user.bot) { //is bot
             newBotMember.execute(member, botRolesFile);
