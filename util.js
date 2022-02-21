@@ -1,5 +1,4 @@
-const Discord = require('discord.js');
-const {MessageEmbed, Permissions, GuildMemberRoleManager} = require('discord.js');
+const {MessageEmbed, Permissions} = require('discord.js');
 const fs = require('fs');
 const rp = require('request-promise');
 
@@ -160,4 +159,4 @@ function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', Autho
     }
 }
 
-module.exports = {getUserData, isAdmin, createDir, createFile, checkID, getFileData, hasRole, giveRole, removeRole ,ready, createLog, notAdmin, createEmbed}
+module.exports = {getUserData, isAdmin, createDir, createFile, checkID, getFileData, hasRole, giveRole, removeRole, ready, createLog, notAdmin, createEmbed}

@@ -11,7 +11,7 @@ function log(type, guild, arg1, arg2 = undefined) {
     if (channelID !== '') {
         if (type === types.EDITED && arg1.content === arg2.content) {
         } else {
-            guild.channels.cache.get(channelID).send(responseBuilder(type, arg1, arg2));
+            guild.channels.cache.get(channelID).send({ embeds: [responseBuilder(type, arg1, arg2)] });
         }
     }
 }
