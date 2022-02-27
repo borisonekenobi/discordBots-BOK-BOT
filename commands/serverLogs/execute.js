@@ -8,7 +8,7 @@ function execute(interaction, guild) {
             return setup.setup(interaction, guild);
 
         case 'disable':
-            return disable.disable(interaction, guild);
+            return disable.disable(guild);
     }
 }
 

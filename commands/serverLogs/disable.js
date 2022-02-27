@@ -2,8 +2,8 @@ const util = require('../../util');
 
 const fs = require("fs");
 
-function disable(interaction, guild) {
-    const file = './servers/' + guild.id + '.logsfile';
+function disable(guild) {
+    const file = './servers/' + guild.id + '/logsfile.txt';
     util.createFile(file);
     const data = fs.readFileSync(file, 'utf8');
 

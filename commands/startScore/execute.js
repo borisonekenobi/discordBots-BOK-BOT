@@ -1,6 +1,6 @@
 const util = require('../../util');
 
-function execute(interaction, guild, rolesFile, options) {
+function execute(guild, rolesFile, options) {
     return util.getUserData(options, guild, rolesFile);
 }
 

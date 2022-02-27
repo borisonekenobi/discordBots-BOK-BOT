@@ -43,7 +43,7 @@ function getUserData(options, guild, rolesFile) {
         createLog(err);
     });
 
-    return 'Done setup. Use !bok help for help';
+    return createEmbed('#00FF00', '', '', '', '', '', 'Done scoring members');
 }
 
 function isAdmin(user) {

@@ -1,5 +1,5 @@
 require('dotenv').config();
-const {Client, Intents, APIMessage} = require('discord.js');
+const {Client, Intents, MessagePayload} = require('discord.js');
 let bot = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS]
 });
@@ -83,7 +83,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                             break;
 
                         case 'startscore':
-                            content = startScore.execute(interaction, guild, rolesFile, {
+                            content = startScore.execute(guild, rolesFile, {
                                 url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
                                 json: true
                             });
@@ -108,23 +108,16 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 return;
         }
 
-        const createAPIMessage = async(interaction, content) => {
-            const { data, files } = await APIMessage.create(
-                bot.channels.resolve(interaction.channel_id),
-                content
-            )
-                .resolveData()
-                .resolveFiles()
-            return { ...data, files }
-        }
-
         const reply = async (interaction, response) => {
-            let data = {
-                content: response
-            }
-
+            let data
             if (typeof response === 'object') {
-                data = await createAPIMessage(interaction, response)
+                data = {
+                    embeds: [response]
+                };
+            } else {
+                data = {
+                    content: response
+                };
             }
 
             bot.api.interactions(interaction.id, interaction.token).callback.post({
@@ -132,9 +125,9 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                     type: 4,
                     data
                 }
-            })
+            });
         };
-        await reply(interaction, content)
+        await reply(interaction, content);
 
     } catch (err) {
         util.createLog(err);
