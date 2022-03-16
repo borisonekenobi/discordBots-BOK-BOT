@@ -102,7 +102,9 @@ function giveRole(member, role, roleID, msg = undefined) {
             })
             .then(() => console.log(member.id + ' awarded ' + role.id + ' role'))
             .catch(() => {
-                member.guild.members.fetch(member.guild.ownerId).send('Error occured while adding role to ' + member.username + '#' + member.discriminator + '! *It\'s possible that the bot\'s role is not high enough in the hierarchy, move the bot\'s role above all roles that it will be awarding*')
+                member.guild.fetchOwner().then(owner => {
+                    owner.send('Error occured while adding role to ' + member.username + '#' + member.discriminator + '! *It\'s possible that the bot\'s role is not high enough in the hierarchy, move the bot\'s role above all roles that it will be awarding*');
+                });
             });
     } else {
         console.log(member.id + ' already has ' + role.id + ', no role awarded');
