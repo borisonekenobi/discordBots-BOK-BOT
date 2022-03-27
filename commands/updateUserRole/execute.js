@@ -3,7 +3,7 @@ const rp = require('request-promise');
 
 const util = require('../../util');
 
-function execute(msg, msgContent, member, rolesFile, options) {
+function execute(msg, member, rolesFile, options) {
     const userData = [];
     rp(options)
         .then((data) => {

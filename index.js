@@ -177,7 +177,7 @@ bot.on('messageCreate', msg => {
             json: true
         }
         if (msg.author.id === '159985870458322944' && member !== undefined) {
-            updateUserRole.execute(msg, msgContent, member, rolesFile, options);
+            updateUserRole.execute(msg, member, rolesFile, options);
 
         } else if (!msg.author.bot) {
             // Tom Tbomb easter egg
