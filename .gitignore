@@ -59,11 +59,9 @@ typings/
 
 # next.js build output
 .next
+
+# Project specific files
 /servers/
-/commands/
-/commands/
-/commands/
-/commands/
 /createCommand.js
 /command.json
 /deleteCommand.js

@@ -11,7 +11,8 @@
   "dependencies": {
     "discord.js": "^13.6.0",
     "dotenv": "^8.6.0",
-    "request-promise": "^4.2.6"
+    "pg": "^8.11.4",
+    "request-promise": "^0.0.1"
   },
   "devDependencies": {
     "discord-slash-commands-client": "^1.2.1",

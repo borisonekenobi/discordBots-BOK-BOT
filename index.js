@@ -6,18 +6,17 @@ let bot = new Client({
 const TOKEN = process.env.TOKEN;
 
 const util = require('./util.js');
-const newMember = require('./commands/newMember/execute.js');
-const newBotMember = require('./commands/newBotMember/execute.js');
-const updateUserRole = require('./commands/updateUserRole/execute.js');
+const db = require('./db/dbLevel.js')
+const newMember = require('./commands/newMember.js');
+const newBotMember = require('./commands/newBotMember.js');
+const updateUserRole = require('./commands/updateUserRole.js');
 const consoleInput = require('./commands/console/input.js');
 
-const logs = require('./commands/serverLogs/execute.js');
-const buttonRole = require('./commands/buttonRole/execute.js');
-const role = require('./commands/role/execute.js');
-const startScore = require('./commands/startScore/execute.js');
-const test = require('./commands/test/execute.js');
-
-const log = require('./commands/serverLogs/log.js');
+const logs = require('./commands/serverLogs.js');
+const buttonRole = require('./commands/buttonRole.js');
+const role = require('./commands/role.js');
+const startScore = require('./commands/startScore.js');
+const test = require('./commands/test.js');
 
 bot.login(TOKEN).then(r => console.log('Used token: ' + r));
 
@@ -34,6 +33,8 @@ consoleListener.addListener('data', res => {
     }
 });
 
+const interactionTypes = require('./interactionTypes');
+
 bot.ws.on('INTERACTION_CREATE', async interaction => {
     try {
         //console.log(interaction)
@@ -43,69 +44,78 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         let authorID = interaction.member.user.id;
         let author = await guild.members.fetch(authorID);
         //console.log(author);
-        util.createDir('./servers/' + guildID);
-        let rolesFile = './servers/' + guildID + '/roles.txt';
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
-        console.log('Interaction type ' + type + ' used by ' + authorID + ' in guild ' + guildID + ' in channel ' + interaction.channel_id);
+        console.log(`Interaction type ${type} used by ${authorID} in guild ${guildID} in channel ${interaction.channel_id}`);
         //console.log(interaction);
 
         switch (type) {
-            case 1:
+            case interactionTypes.PING:
                 console.log('type == 1');
                 console.log(interaction);
                 break;
 
-            case 2:
-                if (util.isAdmin(author)) {
-                    switch (name) {
-                        case 'logs':
-                            content = logs.execute(interaction, guild);
-                            break;
-
-                        case 'buttonrole':
-                            let message = buttonRole.execute(interaction, guild);
-                            let msg = message.content;
-                            let components = message.components;
-                            bot.api.interactions(interaction.id, interaction.token).callback.post({
-                                data: {
-                                    type: 4,
-                                    data: {
-                                        content: msg,
-                                        components: components
-                                    }
-                                }
-                            });
-                            return;
-
-                        case 'role':
-                            content = role.execute(interaction, rolesFile, guild);
-                            break;
-
-                        case 'startscore':
-                            content = startScore.execute(guild, rolesFile, {
-                                url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
-                                json: true
-                            });
-                            break;
-
-                        case 'test':
-                            content = test.execute();
-                    }
-                } else {
+            case interactionTypes.APPLICATION_COMMAND:
+                if (!util.isAdmin(author)) {
                     return util.notAdmin();
+                }
+
+                switch (name) {
+                    case 'logs':
+                        content = await logs.execute(interaction, guild);
+                        break;
+
+                    case 'buttonrole':
+                        let message = buttonRole.execute(interaction, guild);
+                        let msg = message.content;
+                        let components = message.components;
+                        bot.api.interactions(interaction.id, interaction.token).callback.post({
+                            data: {
+                                type: 4, data: {
+                                    content: msg, components: components
+                                }
+                            }
+                        });
+                        return;
+
+                    case 'role':
+                        content = await role.execute(interaction, guild);
+                        break;
+
+                    case 'startscore':
+                        content = await startScore.execute(guild);
+                        break;
+
+                    case 'test':
+                        content = test.execute();
                 }
                 break;
 
-            case 3:
+            case interactionTypes.MESSAGE_COMPONENT:
                 buttonRole.buttonClicked(interaction, author, guild);
                 content = undefined;
                 bot.api.interactions(interaction.id, interaction.token).callback.post({
                     data: {
                         type: 6
                     }
-                }).catch(reason => {console.log(reason)})
+                }).catch(reason => {
+                    console.log(reason)
+                })
                 return;
+
+            case interactionTypes.APPLICATION_COMMAND_AUTOCOMPLETE:
+                console.log('type == 4');
+                console.log(interaction);
+                break;
+
+            case interactionTypes.MODAL_SUBMIT:
+                console.log('type == 5');
+                console.log(interaction);
+                break;
+
+            default:
+                console.error('Unknown interaction type');
+                throw new Error('Unknown interaction type');
         }
 
         const reply = async (interaction, response) => {
@@ -122,8 +132,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
 
             bot.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
-                    type: 4,
-                    data
+                    type: 4, data
                 }
             });
         };
@@ -138,53 +147,39 @@ bot.on('guildMemberAdd', async member => {
     try {
         const guild = member.guild;
         const guildID = guild.id;
-        util.createDir('./servers/' + guildID);
-        const rolesFile = './servers/' + guildID + '/roles.txt';
-        const botRolesFile = './servers/' + guildID + '/botroles.txt';
-        util.createFile(rolesFile);
-        util.createFile(botRolesFile);
-        console.log(member.id + ' joined ' + guildID);
+        console.log(`${member.id} joined ${guildID}`);
 
-        log.log(types.JOINED, guild, member);
+        logs.log(types.JOINED, guild, member);
 
-        if (!member.user.bot) { //not bot
-            const options = {
-                url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
-                json: true
-            };
-            newMember.execute(member, rolesFile, options);
-
-        } else if (member.user.bot) { //is bot
-            newBotMember.execute(member, botRolesFile);
-
-        } else {
-            console.log('member\'s user.bot is neither true nor false, no roles given');
+        switch (member.user.bot) {
+            case true:
+                await newBotMember.execute(guild, member);
+                break;
+            case false:
+                await newMember.execute(guild, member, member.joinedAt);
+                break;
+            default:
+                console.log('member\'s user.bot is neither true nor false, no roles given');
         }
     } catch (err) {
         util.createLog(err);
     }
 });
 
-bot.on('messageCreate', msg => {
+bot.on('messageCreate', async msg => {
     try {
-        const msgContent = msg.content;
         const guildID = msg.guild.id;
-        util.createDir('./servers/' + guildID);
-        const rolesFile = './servers/' + guildID + '/roles.txt';
-        const member = msg.mentions.members.first();
-        const options = {
-            url: 'https://mee6.xyz/api/plugins/levels/leaderboard/' + guildID,
-            json: true
-        }
-        if (msg.author.id === '159985870458322944' && member !== undefined) {
-            updateUserRole.execute(msg, member, rolesFile, options);
+        const guild = bot.guilds.cache.get(guildID);
+        const memberID = msg.author.id;
+        const member = await guild.members.fetch(memberID);
 
-        } else if (!msg.author.bot) {
-            // Tom Tbomb easter egg
-            if (msgContent === 'Tom') {
-                msg.channel.send('Tbomb!');
-            }
-        }
+        if (msg.author.bot) return;
+
+        let levelIncreased = await db.updateUser(msg.guild.id, msg.author.id, msg.createdAt);
+        if (!levelIncreased) return;
+
+        await updateUserRole.execute(guild, member, levelIncreased);
+        msg.channel.send(`GG <@${msg.author.id}>, you just advanced to level ${levelIncreased}!`)
     } catch (err) {
         util.createLog(err);
         msg.channel.send('An error occurred!');
@@ -195,8 +190,8 @@ const types = require('./types.js')
 
 bot.on('messageUpdate', (oldMessage, newMessage) => {
     try {
-        console.log(oldMessage.author.id + ' edited message in guild ' + oldMessage.channel.guild.id + ' in channel ' + oldMessage.channel.id);
-        log.log(types.EDITED, oldMessage.channel.guild, oldMessage, newMessage);
+        console.log(`${oldMessage.author.id} edited message in guild ${oldMessage.channel.guild.id} in channel ${oldMessage.channel.id}`);
+        logs.log(types.EDITED, oldMessage.channel.guild, oldMessage, newMessage);
     } catch (err) {
         util.createLog(err);
         oldMessage.channel.send('An error occurred!');
@@ -205,8 +200,8 @@ bot.on('messageUpdate', (oldMessage, newMessage) => {
 
 bot.on("messageDelete", (deleteMessage) => {
     try {
-        console.log(deleteMessage.author.id + ' deleted message in guild ' + deleteMessage.channel.guild.id + ' in channel ' + deleteMessage.channel.id);
-        log.log(types.DELETED, deleteMessage.channel.guild, deleteMessage);
+        console.log(`${deleteMessage.author.id} deleted message in guild ${deleteMessage.channel.guild.id} in channel ${deleteMessage.channel.id}`);
+        logs.log(types.DELETED, deleteMessage.channel.guild, deleteMessage);
     } catch (err) {
         util.createLog(err);
         deleteMessage.channel.send('An error occurred!');
@@ -215,8 +210,8 @@ bot.on("messageDelete", (deleteMessage) => {
 
 bot.on('guildMemberRemove', member => {
     try {
-        console.log(member.id + ' left ' + member.guild.id);
-        log.log(types.LEFT, member.guild, member);
+        console.log(`${member.id} left ${member.guild.id}`);
+        logs.log(types.LEFT, member.guild, member);
     } catch (err) {
         util.createLog(err);
     }
