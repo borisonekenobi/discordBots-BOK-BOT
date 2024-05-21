@@ -114,8 +114,8 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 break;
 
             default:
-                console.error('Unknown interaction type');
-                throw new Error('Unknown interaction type');
+                console.error(`Unknown interaction type: ${interaction.type}`);
+                throw new Error('Unknown interaction type: ${interaction.type}');
         }
 
         const reply = async (interaction, response) => {
@@ -149,7 +149,7 @@ bot.on('guildMemberAdd', async member => {
         const guildID = guild.id;
         console.log(`${member.id} joined ${guildID}`);
 
-        logs.log(types.JOINED, guild, member);
+        await logs.log(types.JOINED, guild, member);
 
         switch (member.user.bot) {
             case true:
@@ -188,30 +188,30 @@ bot.on('messageCreate', async msg => {
 
 const types = require('./types.js')
 
-bot.on('messageUpdate', (oldMessage, newMessage) => {
+bot.on('messageUpdate', async (oldMessage, newMessage) => {
     try {
         console.log(`${oldMessage.author.id} edited message in guild ${oldMessage.channel.guild.id} in channel ${oldMessage.channel.id}`);
-        logs.log(types.EDITED, oldMessage.channel.guild, oldMessage, newMessage);
+        await logs.log(types.EDITED, oldMessage.channel.guild, oldMessage, newMessage);
     } catch (err) {
         util.createLog(err);
         oldMessage.channel.send('An error occurred!');
     }
 });
 
-bot.on("messageDelete", (deleteMessage) => {
+bot.on("messageDelete", async (deleteMessage) => {
     try {
         console.log(`${deleteMessage.author.id} deleted message in guild ${deleteMessage.channel.guild.id} in channel ${deleteMessage.channel.id}`);
-        logs.log(types.DELETED, deleteMessage.channel.guild, deleteMessage);
+        await logs.log(types.DELETED, deleteMessage.channel.guild, deleteMessage);
     } catch (err) {
         util.createLog(err);
         deleteMessage.channel.send('An error occurred!');
     }
 });
 
-bot.on('guildMemberRemove', member => {
+bot.on('guildMemberRemove', async member => {
     try {
         console.log(`${member.id} left ${member.guild.id}`);
-        logs.log(types.LEFT, member.guild, member);
+        await logs.log(types.LEFT, member.guild, member);
     } catch (err) {
         util.createLog(err);
     }
