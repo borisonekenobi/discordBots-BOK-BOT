@@ -17,21 +17,24 @@ async function log(type, guild, arg1, arg2 = undefined) {
     let channel = await dbUtil.getChannel(server_log_channel.channel_id, client);
     if (!channel) channel = await dbUtil.addChannel(server_log_channel.channel_id, client);
 
-    if (!(type === types.EDITED && arg1.content === arg2.content))
-        guild.channels.cache.get(channel.discord_id).send({embeds: [responseBuilder(type, arg1, arg2)]});
+    if (type === types.EDITED) arg1.link = `https://discord.com/channels/${arg1.guildId}/${arg1.channelId}/${arg1.id}`
+    if (arg1.content === '') arg1.content = `**${arg1.embeds[0].title}\n${arg1.embeds[0].description}**`;
+    guild.channels.cache.get(channel.discord_id).send({embeds: [responseBuilder(type, arg1, arg2)]});
 }
 
 function responseBuilder(type, arg1, arg2) {
     switch (type) {
         case types.EDITED:
-            return util.createEmbed('#AB9713', '', '', '', '', '', `Message edited by <@${arg1.author.id}> in <#${arg1.channel.id}>:`, '', [{
-                name: 'Before:', value: arg1.content
-            }, {name: 'After:', value: arg2.content}]);
+            return util.createEmbed('#AB9713', '', '', '', '', '', `Message edited by <@${arg1.author.id}> in <#${arg1.channel.id}>:`, '', [
+                {name: 'Before:', value: arg1.content},
+                {name: 'After:', value: arg2.content},
+                {name: 'Message Link:', value: arg1.link},
+            ]);
 
         case types.DELETED:
-            return util.createEmbed('#AB1327', '', '', '', '', '', `Message sent by <@${arg1.author.id}> deleted in <#${arg1.channel.id}>:`, '', [{
-                name: 'Original Message:', value: arg1.content
-            }]);
+            return util.createEmbed('#AB1327', '', '', '', '', '', `Message sent by <@${arg1.author.id}> deleted in <#${arg1.channel.id}>:`, '', [
+                {name: 'Original Message:', value: arg1.content}
+            ]);
 
         case types.JOINED:
             return util.createEmbed('#37D893', 'Member Joined:', '', '', '', '', `<@${arg1.user.id}> ${arg1.user.username}`);
