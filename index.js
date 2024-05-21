@@ -35,7 +35,7 @@ consoleListener.addListener('data', res => {
 
 const interactionTypes = require('./interactionTypes');
 
-bot.ws.on('INTERACTION_CREATE', async interaction => {
+bot.ws.on('INTERACTION_CREATE', async (interaction) => {
     try {
         //console.log(interaction)
         let type = interaction.type;
@@ -46,6 +46,7 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
         //console.log(author);
         let name = interaction.data.name;
         let content = 'An error occurred and a response could not be generated';
+        let hasReplied = false;
         console.log(`Interaction type ${type} used by ${authorID} in guild ${guildID} in channel ${interaction.channel_id}`);
         //console.log(interaction);
 
@@ -83,7 +84,10 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                         break;
 
                     case 'startscore':
-                        content = await startScore.execute(guild);
+                        await reply(interaction, util.createEmbed('#FFFF00', '', '', '', '', '', 'Scoring members...'));
+                        hasReplied = true;
+                        const channel = await bot.channels.fetch(interaction.channel_id);
+                        await channel.send({embeds: [await startScore.execute(guild)]});
                         break;
 
                     case 'test':
@@ -118,30 +122,32 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
                 throw new Error('Unknown interaction type: ${interaction.type}');
         }
 
-        const reply = async (interaction, response) => {
-            let data
-            if (typeof response === 'object') {
-                data = {
-                    embeds: [response]
-                };
-            } else {
-                data = {
-                    content: response
-                };
-            }
-
-            bot.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                    type: 4, data
-                }
-            });
-        };
-        await reply(interaction, content);
+        if (!hasReplied)
+            await reply(interaction, content);
 
     } catch (err) {
         util.createLog(err);
     }
 });
+
+const reply = async (interaction, response) => {
+    let data
+    if (typeof response === 'object') {
+        data = {
+            embeds: [response]
+        };
+    } else {
+        data = {
+            content: response
+        };
+    }
+
+    bot.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+            type: 4, data
+        }
+    });
+};
 
 bot.on('guildMemberAdd', async member => {
     try {
@@ -168,12 +174,12 @@ bot.on('guildMemberAdd', async member => {
 
 bot.on('messageCreate', async msg => {
     try {
+        if (msg.author.bot) return;
+
         const guildID = msg.guild.id;
         const guild = bot.guilds.cache.get(guildID);
         const memberID = msg.author.id;
         const member = await guild.members.fetch(memberID);
-
-        if (msg.author.bot) return;
 
         let levelIncreased = await db.updateUser(msg.guild.id, msg.author.id, msg.createdAt);
         if (!levelIncreased) return;

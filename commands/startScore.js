@@ -19,7 +19,7 @@ async function execute(guild) {
         try {
             member = await guild.members.fetch(server_user.id);
         } catch (err) {
-            console.error(err);
+            // TODO: remove user because they don't exist
             continue;
         }
         for (const server_role of server_roles) {
