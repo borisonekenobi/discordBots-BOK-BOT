@@ -15,7 +15,13 @@ async function execute(guild) {
     await client.end();
 
     for (const server_user of server_users) {
-        const member = await guild.members.fetch(server_user.id);
+        let member;
+        try {
+            member = await guild.members.fetch(server_user.id);
+        } catch (err) {
+            console.error(err);
+            continue;
+        }
         for (const server_role of server_roles) {
             if (server_role.level > server_user.level) continue;
 
