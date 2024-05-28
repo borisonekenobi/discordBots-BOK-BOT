@@ -65,7 +65,7 @@ bot.ws.on('INTERACTION_CREATE', async (interaction) => {
 
                     case 'logs':
                         if (!util.isAdmin(author)) {
-                            content = util.notAdmin();
+                            content = util.notAdmin(name);
                             break;
                         }
                         content = await logs.execute(interaction, guild);
@@ -73,7 +73,7 @@ bot.ws.on('INTERACTION_CREATE', async (interaction) => {
 
                     case 'buttonrole':
                         if (!util.isAdmin(author)) {
-                            content = util.notAdmin();
+                            content = util.notAdmin(name);
                             break;
                         }
                         let message = buttonRole.execute(interaction, guild);
@@ -90,7 +90,7 @@ bot.ws.on('INTERACTION_CREATE', async (interaction) => {
 
                     case 'role':
                         if (!util.isAdmin(author)) {
-                            content = util.notAdmin();
+                            content = util.notAdmin(name);
                             break;
                         }
                         content = await role.execute(interaction, guild);
@@ -98,7 +98,7 @@ bot.ws.on('INTERACTION_CREATE', async (interaction) => {
 
                     case 'startscore':
                         if (!util.isAdmin(author)) {
-                            content = util.notAdmin();
+                            content = util.notAdmin(name);
                             break;
                         }
                         await reply(interaction, util.createEmbed('#FFFF00', '', '', '', '', '', 'Scoring members...'));

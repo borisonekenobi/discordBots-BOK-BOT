@@ -57,7 +57,8 @@ function createLog(err) {
     }
 }
 
-function notAdmin() {
+function notAdmin(commandName) {
+    console.log(`User doesn't have admin privileges for ${commandName}, skipping`);
     return createEmbed('#FF0000', '', '', 'Error!', 'https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-512.png', '', 'You do not have admin permissions!');
 }
 
