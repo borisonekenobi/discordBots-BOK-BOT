@@ -33,8 +33,8 @@ function removeRole(member, role) {
 }
 
 function ready(bot) {
-    bot.user.setPresence({activities: [{name: `${bot.guilds.cache.size}`, type: 'WATCHING'}], status: 'online'});
-    //bot.setActivity(`serving ${bot.guilds.cache.size} servers`);
+    // TODO: bot.guilds.cache.size
+    bot.user.setPresence({activities: [{name: `Star Wars`, type: 'WATCHING'}], status: 'online'});
     console.info(`Logged in as ${bot.user.tag}`);
     bot.channels.cache.get('738439111412809730').send(':green_circle: Bot has started.');
 }
