@@ -12,6 +12,7 @@ const newBotMember = require('./commands/newBotMember.js');
 const updateUserRole = require('./commands/updateUserRole.js');
 const consoleInput = require('./commands/console/input.js');
 
+const level = require('./commands/level.js');
 const logs = require('./commands/serverLogs.js');
 const buttonRole = require('./commands/buttonRole.js');
 const role = require('./commands/role.js');
@@ -57,6 +58,12 @@ bot.ws.on('INTERACTION_CREATE', async (interaction) => {
                 break;
 
             case interactionTypes.APPLICATION_COMMAND:
+                switch (name) {
+                    case 'level':
+                        content = await level.execute(authorID, guildID);
+                        break;
+                }
+
                 if (!util.isAdmin(author)) {
                     return util.notAdmin();
                 }

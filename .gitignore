@@ -61,7 +61,7 @@ typings/
 .next
 
 # Project specific files
-/servers/
 /createCommand.js
-/command.json
 /deleteCommand.js
+/command.json
+/commands.json

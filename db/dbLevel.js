@@ -30,6 +30,28 @@ async function updateUser(serverID, userID, date) {
     return levelIncreased;
 }
 
+async function getUser(serverID, userID) {
+    let server_user = false;
+
+    const client = dbClient.getClient();
+    await (async () => {
+        await client.connect();
+
+        let server = await dbUtil.getServerByID(serverID, client);
+        if (!server) server = await dbUtil.addServer(serverID, client);
+
+        let user = await dbUtil.getUserByID(userID, client);
+        if (!user) user = await dbUtil.addUser(userID, client);
+
+        server_user = await dbUtil.getServerUserByID(server.id, user.id, client);
+        if (!server_user) server_user = await dbUtil.addServerUser(server.id, user.id, date, client);
+    })();
+    await client.end();
+
+    return server_user;
+}
+
 module.exports = {
-    updateUser
+    updateUser,
+    getUser
 }

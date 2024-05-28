@@ -319,6 +319,18 @@ async function removeServerLogChannel(serverID, client) {
     })();
 }
 
+async function getPointsForLevel(level, client) {
+    let res;
+    await (async () => {
+        res = await client.query(
+            `SELECT bokbot.points_for_level($1) AS points;`,
+            [level]
+        );
+    })();
+
+    return res.rows[0].points;
+}
+
 module.exports = {
     getServerByID,
     addServer,
@@ -342,5 +354,6 @@ module.exports = {
     getServerLogChannelByID,
     addServerLogChannel,
     setServerLogChannel,
-    removeServerLogChannel
+    removeServerLogChannel,
+    getPointsForLevel
 }
