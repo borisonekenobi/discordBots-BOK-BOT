@@ -26,7 +26,7 @@ async function execute(guildID, member, otherMember = false) {
         }
     ]
 
-    return util.createEmbed('#00FF00', `${otherMemberText}Level ${user.level}`, '', '', '', '', `${user.points}/${pointsForNextLevel}`, '', fields);
+    return util.createEmbed('#00FF00', `${otherMemberText}Rank #${user.rank} - Level ${user.level}`, '', '', '', '', `${user.points}/${pointsForNextLevel}`, '', fields);
 }
 
 function infinite() {

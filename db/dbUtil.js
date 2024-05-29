@@ -114,6 +114,20 @@ async function addServerUser(serverID, userID, date, client) {
     return res.rows[0];
 }
 
+async function getUserRank(serverID, userID, client) {
+    let rank;
+    await (async () => {
+        let res = await client.query(
+            `SELECT bokbot.get_user_rank($1, $2) AS rank;`,
+            [serverID, userID]
+        );
+
+        rank = res.rows[0].rank;
+    })();
+
+    return rank;
+}
+
 async function addPointsToUser(serverUser, date, client) {
     let res;
     await (async () => {
@@ -340,6 +354,7 @@ module.exports = {
     addRole,
     getServerUserByID,
     addServerUser,
+    getUserRank,
     addPointsToUser,
     getServerRoleByID,
     addServerRole,
