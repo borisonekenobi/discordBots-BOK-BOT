@@ -1,9 +1,5 @@
-const {MessageEmbed, Permissions} = require('discord.js');
+const {MessageEmbed} = require('discord.js');
 const fs = require('fs');
-
-function isAdmin(user) {
-    return user.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || user.id === '360377836479053826';
-}
 
 function hasRole(member, roleID) {
     return member._roles.indexOf(roleID) >= 0;
@@ -57,11 +53,6 @@ function createLog(err) {
     }
 }
 
-function notAdmin(commandName) {
-    console.log(`User doesn't have admin privileges for ${commandName}, skipping`);
-    return createEmbed('#FF0000', '', '', 'Error!', 'https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-512.png', '', 'You do not have admin permissions!');
-}
-
 function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', AuthorImage = '', AuthorURL = '', Description = 'Description', Thumbnail = '', Fields = [], Image = '', Footer = '', FooterURL = '') {
     try {
         return new MessageEmbed()
@@ -81,12 +72,10 @@ function createEmbed(Color = '#000000', Title = '', URL = '', Author = '', Autho
 }
 
 module.exports = {
-    isAdmin,
     hasRole,
     giveRole,
     removeRole,
     ready,
     createLog,
-    notAdmin,
     createEmbed
 }
