@@ -1,5 +1,6 @@
 const dbClient = require('./dbClient');
 const dbUtil = require('./dbUtil');
+const db = require("./dbUtil");
 
 async function updateUser(serverID, userID, date) {
     let levelIncreased = false;
@@ -51,7 +52,22 @@ async function getUser(serverID, userID) {
     return server_user;
 }
 
+async function getPointsForLevel(level) {
+    let points_for_level = NaN;
+
+    const client = dbClient.getClient();
+    await (async () => {
+        await client.connect();
+
+        points_for_level = await db.getPointsForLevel(level, client);
+    })();
+    await client.end();
+
+    return points_for_level;
+}
+
 module.exports = {
     updateUser,
-    getUser
+    getUser,
+    getPointsForLevel
 }

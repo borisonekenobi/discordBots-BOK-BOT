@@ -1,14 +1,13 @@
 const util = require("../util");
-const db = require("../db/dbUtil");
-const dbClient = require("../db/dbClient");
 const dbLevel = require("../db/dbLevel");
 
-async function execute(userID, guildID) {
+async function execute(guildID, member, otherMember = false) {
+    const userID = member.id;
+
     const user = await dbLevel.getUser(guildID, userID)
-    const client = dbClient.getClient();
-    await client.connect();
-    const pointsForNextLevel = await db.getPointsForLevel(user.level + 1, client);
-    await client.end;
+    const pointsForNextLevel = await dbLevel.getPointsForLevel(user.level + 1);
+
+    const otherMemberText = otherMember ? `${otherMember.displayName} - ` : '';
 
     const percent = Math.round(user.points / pointsForNextLevel * 100);
 
@@ -21,12 +20,27 @@ async function execute(userID, guildID) {
     const empty = '▒'.repeat(numEmpty);
 
     const fields = [
-        {name: `__${underline}⠀${percent}%${underline}${percent >= 10 ? '' : '⠀'}__`, value: `${user.level} ${filled}${empty} ${user.level + 1}`}
+        {
+            name: `__${underline}⠀${percent}%${underline}${percent >= 10 ? '' : '⠀'}__`,
+            value: `${user.level} ${filled}${empty} ${user.level + 1}`
+        }
     ]
 
-    return util.createEmbed('#00FF00', `Level ${user.level}`, '', '', '', '', `${user.points}/${pointsForNextLevel}`, '', fields);
+    return util.createEmbed('#00FF00', `${otherMemberText}Level ${user.level}`, '', '', '', '', `${user.points}/${pointsForNextLevel}`, '', fields);
+}
+
+function infinite() {
+    const underline = '⠀'.repeat(11);
+    const fields = [
+        {
+            name: `__${underline}∞%${underline}__`,
+            value: `∞ ${'█'.repeat(20)} ∞`
+        }
+    ]
+    return util.createEmbed('#00FF00', `Level ∞`, '', '', '', '', `∞/∞`, '', fields);
 }
 
 module.exports = {
-    execute
+    execute,
+    infinite
 }

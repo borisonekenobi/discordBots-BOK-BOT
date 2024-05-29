@@ -60,7 +60,16 @@ bot.ws.on('INTERACTION_CREATE', async (interaction) => {
             case interactionTypes.APPLICATION_COMMAND:
                 switch (name) {
                     case 'level':
-                        content = await level.execute(authorID, guildID);
+                        let memberID = interaction.data.options === undefined ? false : interaction.data.options[0].value;
+                        let member = false;
+                        if (memberID) member = await guild.members.fetch(memberID);
+
+                        if (!member)
+                            content = await level.execute(guildID, author);
+                        else if (member.user.bot)
+                            content = await level.infinite();
+                        else
+                            content = await level.execute(guildID, member, true);
                         break;
 
                     case 'logs':
