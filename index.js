@@ -64,7 +64,7 @@ bot.ws.on('INTERACTION_CREATE', async (interaction) => {
                         let member = false;
                         if (memberID) member = await guild.members.fetch(memberID);
 
-                        if (!member)
+                        if (!member || memberID === authorID)
                             content = await level.execute(guildID, author);
                         else if (member.user.bot)
                             content = await level.infinite();

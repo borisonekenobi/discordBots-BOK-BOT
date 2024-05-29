@@ -7,7 +7,7 @@ async function execute(guildID, member, otherMember = false) {
     const user = await dbLevel.getUser(guildID, userID)
     const pointsForNextLevel = await dbLevel.getPointsForLevel(user.level + 1);
 
-    const otherMemberText = otherMember ? `${otherMember.displayName} - ` : '';
+    const otherMemberText = otherMember ? `${member.displayName} - ` : '';
 
     const percent = Math.round(user.points / pointsForNextLevel * 100);
 
