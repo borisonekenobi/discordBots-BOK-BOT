@@ -5,8 +5,7 @@ const dbClient = require('../db/dbClient')
 const dbLogs = require('../db/dbLogs')
 
 async function log(type, guild, arg1, arg2 = undefined) {
-    const client = dbClient.getClient();
-    await client.connect();
+    const client = await dbClient.getClient();
 
     let server = await dbUtil.getServerByID(guild.id, client);
     if (!server) await dbUtil.addServer(guild.id, client);
@@ -58,8 +57,7 @@ async function execute(interaction, guild) {
 async function setup(interaction, guild) {
     let channelID = interaction.data.options[0].options[0].value;
 
-    const client = dbClient.getClient();
-    await client.connect();
+    const client = await dbClient.getClient();
 
     let server = await dbUtil.getServerByID(guild.id, client);
     if (!server) server = await dbUtil.addServer(guild.id, client);
@@ -80,8 +78,7 @@ async function disable(guild) {
         return util.createEmbed('#F9A825', '', '', 'Warning!', '', '', 'No logs channel is setup yet!');
     }
 
-    const client = dbClient.getClient();
-    await client.connect();
+    const client = await dbClient.getClient();
 
     let server = await dbUtil.getServerByID(guild.id, client);
     if (!server) server = await dbUtil.addServer(guild.id, client);

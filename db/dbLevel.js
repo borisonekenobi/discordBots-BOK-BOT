@@ -5,10 +5,8 @@ const db = require("./dbUtil");
 async function updateUser(serverID, userID, date) {
     let levelIncreased = false;
 
-    const client = dbClient.getClient();
+    const client = await dbClient.getClient();
     await (async () => {
-        await client.connect();
-
         let server = await dbUtil.getServerByID(serverID, client);
         if (!server) server = await dbUtil.addServer(serverID, client);
 
@@ -34,10 +32,8 @@ async function updateUser(serverID, userID, date) {
 async function getUser(serverID, userID) {
     let server_user = false;
 
-    const client = dbClient.getClient();
+    const client = await dbClient.getClient();
     await (async () => {
-        await client.connect();
-
         let server = await dbUtil.getServerByID(serverID, client);
         if (!server) server = await dbUtil.addServer(serverID, client);
 
@@ -57,10 +53,8 @@ async function getUser(serverID, userID) {
 async function getPointsForLevel(level) {
     let points_for_level = NaN;
 
-    const client = dbClient.getClient();
+    const client = await dbClient.getClient();
     await (async () => {
-        await client.connect();
-
         points_for_level = await db.getPointsForLevel(level, client);
     })();
     await client.end();

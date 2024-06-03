@@ -3,8 +3,7 @@ const dbClient = require("../db/dbClient");
 const dbUtil = require("../db/dbUtil");
 
 async function execute(guild, member) {
-    const client = dbClient.getClient();
-    await client.connect();
+    const client = await dbClient.getClient();
 
     let server = await dbUtil.getServerByID(guild.id, client);
     if (!server) server = await dbUtil.addServer(guild.id, client);

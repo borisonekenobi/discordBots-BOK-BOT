@@ -3,8 +3,7 @@ const dbClient = require("../db/dbClient");
 const dbUtil = require("../db/dbUtil");
 
 async function execute(guild) {
-    const client = dbClient.getClient();
-    await client.connect();
+    const client = await dbClient.getClient();
 
     let server = await dbUtil.getServerByID(guild.id, client);
     if (!server) server = await dbUtil.addServer(guild.id, client);
@@ -19,7 +18,7 @@ async function execute(guild) {
         try {
             member = await guild.members.fetch(server_user.id);
         } catch (err) {
-            // TODO: remove user because they don't exist
+            // TODO: remove user because they don't exist, maybe?
             continue;
         }
         for (const server_role of server_roles) {

@@ -4,9 +4,8 @@ const dbUtil = require("./dbUtil");
 async function serverHasRole(guildID, roleID) {
     let hasRole = false;
 
-    const client = dbClient.getClient();
+    const client = await dbClient.getClient();
     await (async () => {
-        await client.connect();
         let role = await dbUtil.getRoleByID(roleID, client);
         if (!role) return;
 
@@ -19,10 +18,8 @@ async function serverHasRole(guildID, roleID) {
 }
 
 async function addRole(serverID, roleID, roleLevel) {
-    const client = dbClient.getClient();
+    const client = await dbClient.getClient();
     await (async () => {
-        await client.connect();
-
         let server = await dbUtil.getServerByID(serverID, client);
         if (!server) server = await dbUtil.addServer(serverID, client);
 
@@ -36,10 +33,8 @@ async function addRole(serverID, roleID, roleLevel) {
 }
 
 async function editRole(serverID, roleID, roleLevel) {
-    const client = dbClient.getClient();
+    const client = await dbClient.getClient();
     await (async () => {
-        await client.connect();
-
         let server = await dbUtil.getServerByID(serverID, client);
         let role = await dbUtil.getRoleByID(roleID, client);
         let server_role = await dbUtil.getServerRoleByID(server.id, role.id, client);
@@ -52,12 +47,10 @@ async function editRole(serverID, roleID, roleLevel) {
 }
 
 async function listRoles(serverID) {
-    const client = dbClient.getClient();
+    const client = await dbClient.getClient();
 
     let roles = [];
     await (async () => {
-        await client.connect();
-
         let server = await dbUtil.getServerByID(serverID, client);
         if (!server) server = await dbUtil.addServer(serverID, client);
 
@@ -69,10 +62,8 @@ async function listRoles(serverID) {
 }
 
 async function removeRole(serverID, roleID) {
-    const client = dbClient.getClient();
+    const client = await dbClient.getClient();
     await (async () => {
-        await client.connect();
-
         let server = await dbUtil.getServerByID(serverID, client);
         let role = await dbUtil.getRoleByID(roleID, client);
         let server_role = await dbUtil.getServerRoleByID(server.id, role.id, client);
