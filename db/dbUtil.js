@@ -100,7 +100,7 @@ async function getServerUserByID(serverID, userID, client) {
     return res.rows.length === 0 ? false : res.rows[0];
 }
 
-async function addServerUser(serverID, userID, date, client) {
+async function addServerUser(serverID, userID, date = new Date(1970, 0, 1), client) {
     let res;
     await (async () => {
         res = await client.query(

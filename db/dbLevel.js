@@ -41,7 +41,7 @@ async function getUser(serverID, userID) {
         if (!user) user = await dbUtil.addUser(userID, client);
 
         server_user = await dbUtil.getServerUserByID(server.id, user.id, client);
-        if (!server_user) server_user = await dbUtil.addServerUser(server.id, user.id, date, client);
+        if (!server_user) server_user = await dbUtil.addServerUser(server.id, user.id, undefined, client);
 
         server_user.rank = await dbUtil.getUserRank(server.id, user.id, client);
     })();
