@@ -7,7 +7,9 @@ async function updateUser(serverID, userID, date) {
 
     const client = await dbClient.getClient();
     await (async () => {
+        console.log(serverID, userID, date);
         let server = await dbUtil.getServerByID(serverID, client);
+        console.log(server);
         if (!server) server = await dbUtil.addServer(serverID, client);
 
         let user = await dbUtil.getUserByID(userID, client);
